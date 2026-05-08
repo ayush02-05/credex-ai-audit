@@ -1,7 +1,12 @@
 import React from "react";
+import SpendForm from "./components/SpendForm";
 
 function App() {
-  return <div>App</div>;
+  return (
+    <div>
+      <SpendForm />
+    </div>
+  );
 }
 
 export default App;
