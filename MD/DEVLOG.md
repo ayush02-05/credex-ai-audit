@@ -2,7 +2,7 @@
 
 ## Day 1 — 2026-05-07
 
-**Hours worked:** 3
+**Hours worked:** 3 Hours
 
 **What I did:**
 
@@ -31,3 +31,25 @@
 - Start building the frontend form.
 - Add dynamic fields for multiple AI tools.
 - Implement localStorage so the form data stays saved after page refresh.
+
+## Day 2 — 2026-05-08
+
+**Hours worked:**
+2 Hours
+
+**What I did:**
+
+- Created the main audit form UI using React and Tailwind CSS
+- Built dynamic AI tool selection functionality
+- Added plan selection based on selected AI tool
+- Implemented input fields for monthly spend, seats, team size, and use case
+- Added support for Cursor, GitHub Copilot, Claude, ChatGPT, Gemini, OpenAI API, Anthropic API, and Windsurf/v0
+- Implemented LocalStorage persistence to save form state across reloads
+- Designed a responsive dashboard-style interface
+
+**Plan for tomorrow:**
+
+- Start building the audit engine logic
+- Add pricing comparison and optimization suggestions
+- Create audit result cards and report UI
+- Begin integrating recommendation system for cheaper plans/tools
