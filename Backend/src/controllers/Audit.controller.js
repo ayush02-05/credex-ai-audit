@@ -1,209 +1,3 @@
-// const PRICING_DATA = {
-//   Cursor: {
-//     provider: "Cursor",
-//     plans: [
-//       {
-//         name: "Hobby",
-//         pricePerMonth: 0,
-//         maxSeats: 1,
-//         features: ["Basic AI coding", "Limited usage"],
-//       },
-//       {
-//         name: "Pro",
-//         pricePerMonth: 20,
-//         maxSeats: 1,
-//         features: ["Unlimited completions", "Advanced AI models"],
-//       },
-//       {
-//         name: "Business",
-//         pricePerMonth: 40,
-//         maxSeats: 100,
-//         features: ["Team management", "Privacy mode", "Admin controls"],
-//       },
-//       {
-//         name: "Enterprise",
-//         pricePerMonth: 60,
-//         maxSeats: "Unlimited",
-//         features: ["Enterprise security", "SSO", "Dedicated support"],
-//       },
-//     ],
-//   },
-
-//   "GitHub Copilot": {
-//     provider: "GitHub",
-//     plans: [
-//       {
-//         name: "Individual",
-//         pricePerMonth: 10,
-//         maxSeats: 1,
-//         features: ["AI code completion"],
-//       },
-//       {
-//         name: "Business",
-//         pricePerMonth: 19,
-//         maxSeats: 500,
-//         features: ["Organization management", "Policy controls"],
-//       },
-//       {
-//         name: "Enterprise",
-//         pricePerMonth: 39,
-//         maxSeats: "Unlimited",
-//         features: ["Enterprise governance", "Advanced security"],
-//       },
-//     ],
-//   },
-
-//   Claude: {
-//     provider: "Anthropic",
-//     plans: [
-//       {
-//         name: "Free",
-//         pricePerMonth: 0,
-//         maxSeats: 1,
-//         features: ["Limited Claude access"],
-//       },
-//       {
-//         name: "Pro",
-//         pricePerMonth: 20,
-//         maxSeats: 1,
-//         features: ["Higher usage limits", "Claude advanced models"],
-//       },
-//       {
-//         name: "Max",
-//         pricePerMonth: 100,
-//         maxSeats: 1,
-//         features: ["Highest usage limits"],
-//       },
-//       {
-//         name: "Team",
-//         pricePerMonth: 30,
-//         maxSeats: 200,
-//         features: ["Team collaboration", "Shared workspace"],
-//       },
-//       {
-//         name: "Enterprise",
-//         pricePerMonth: 60,
-//         maxSeats: "Unlimited",
-//         features: ["SSO", "Compliance", "Enterprise support"],
-//       },
-//       {
-//         name: "API Direct",
-//         pricePerMonth: "Usage Based",
-//         maxSeats: "Unlimited",
-//         features: ["API access", "Token billing"],
-//       },
-//     ],
-//   },
-
-//   ChatGPT: {
-//     provider: "OpenAI",
-//     plans: [
-//       {
-//         name: "Plus",
-//         pricePerMonth: 20,
-//         maxSeats: 1,
-//         features: ["GPT-4 access", "Priority usage"],
-//       },
-//       {
-//         name: "Team",
-//         pricePerMonth: 30,
-//         maxSeats: 250,
-//         features: ["Shared workspace", "Team management"],
-//       },
-//       {
-//         name: "Enterprise",
-//         pricePerMonth: 60,
-//         maxSeats: "Unlimited",
-//         features: ["Enterprise-grade security", "Unlimited GPT-4"],
-//       },
-//       {
-//         name: "API Direct",
-//         pricePerMonth: "Usage Based",
-//         maxSeats: "Unlimited",
-//         features: ["OpenAI API access"],
-//       },
-//     ],
-//   },
-
-//   Gemini: {
-//     provider: "Google",
-//     plans: [
-//       {
-//         name: "Pro",
-//         pricePerMonth: 20,
-//         maxSeats: 1,
-//         features: ["Gemini Advanced", "Google Workspace AI"],
-//       },
-//       {
-//         name: "Ultra",
-//         pricePerMonth: 40,
-//         maxSeats: 1,
-//         features: ["Highest Gemini capabilities"],
-//       },
-//       {
-//         name: "API",
-//         pricePerMonth: "Usage Based",
-//         maxSeats: "Unlimited",
-//         features: ["Gemini API access"],
-//       },
-//     ],
-//   },
-
-//   Windsurf: {
-//     provider: "Codeium",
-//     plans: [
-//       {
-//         name: "Free",
-//         pricePerMonth: 0,
-//         maxSeats: 1,
-//         features: ["Basic AI coding assistant"],
-//       },
-//       {
-//         name: "Pro",
-//         pricePerMonth: 15,
-//         maxSeats: 1,
-//         features: ["Advanced completions", "Faster responses"],
-//       },
-//       {
-//         name: "Team",
-//         pricePerMonth: 35,
-//         maxSeats: 100,
-//         features: ["Team collaboration", "Admin dashboard"],
-//       },
-//       {
-//         name: "Enterprise",
-//         pricePerMonth: 55,
-//         maxSeats: "Unlimited",
-//         features: ["Enterprise security", "SSO", "Analytics"],
-//       },
-//     ],
-//   },
-
-//   "Anthropic API": {
-//     provider: "Anthropic",
-//     plans: [
-//       {
-//         name: "API",
-//         pricePerMonth: "Usage Based",
-//         maxSeats: "Unlimited",
-//         features: ["Claude API usage"],
-//       },
-//     ],
-//   },
-
-//   "OpenAI API": {
-//     provider: "OpenAI",
-//     plans: [
-//       {
-//         name: "API",
-//         pricePerMonth: "Usage Based",
-//         maxSeats: "Unlimited",
-//         features: ["GPT API access"],
-//       },
-//     ],
-//   },
-// };
-
 const PRICING_DATA = {
   Cursor: {
     Hobby: {
@@ -402,7 +196,7 @@ const PRICING_DATA = {
 
 const createAudit = async (req, res) => {
   try {
-    const { tools } = req.body.tools;
+    const { tools } = req.body;
 
     if (!tools || tools.length === 0) {
       return res.status(400).json({ error: "No tools provided" });
@@ -410,7 +204,7 @@ const createAudit = async (req, res) => {
 
     //  find alternatives and calculate savings
     const processedTools = tools.map((tool) => {
-      const toolData = PRICING_DATA[tool.name];
+      const toolData = PRICING_DATA[tool.provider];
       let alternativeCost = tool.monthlyCost; // default: no savings
       let recommendedAlternative = "No alternative found";
 
@@ -428,7 +222,7 @@ const createAudit = async (req, res) => {
       const yearlySavings = monthlySavings * 12;
 
       return {
-        name: tool.name,
+        name: tool.provider,
         currentPlan: tool.currentPlan,
         monthlyCost: tool.monthlyCost,
         teamSize: tool.teamSize,
@@ -450,19 +244,20 @@ const createAudit = async (req, res) => {
       0,
     );
 
-    // Create audit
-    const audit = new Audit({
-      tools: processedTools,
-      totalMonthlySavings,
-      totalYearlySavings,
-      aiSummary: "", // Will be filled later
-    });
+    // // Create audit
+    // const audit = new Audit({
+    //   tools: processedTools,
+    //   totalMonthlySavings,
+    //   totalYearlySavings,
+    //   aiSummary: "", // Will be filled later
+    // });
 
-    await audit.save();
+    // await audit.save();
 
     res.status(201).json({
       success: true,
-      auditId: audit._id,
+      processedTools,
+      // auditId: audit._id,
       message: "Audit created successfully",
     });
   } catch (error) {
@@ -470,6 +265,8 @@ const createAudit = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+
+
 
 module.exports = {
   createAudit,
