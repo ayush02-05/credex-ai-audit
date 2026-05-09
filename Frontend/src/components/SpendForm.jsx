@@ -1,246 +1,5 @@
-// import { useEffect } from "react";
-// import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 
-// function SpendForm() {
-//   const tools = {
-//     Cursor: ["Hobby", "Pro", "Business", "Enterprise"],
-//     "GitHub Copilot": ["Individual", "Business", "Enterprise"],
-//     Claude: ["Free", "Pro", "Max", "Team", "Enterprise", "API Direct"],
-//     ChatGPT: ["Plus", "Team", "Enterprise", "API Direct"],
-//     "Anthropic API Direct": ["API"],
-//     "OpenAI API Direct": ["API"],
-//     Gemini: ["Pro", "Ultra", "API"],
-//     "Windsurf / v0": ["Free", "Pro", "Team", "Enterprise"],
-//   };
-
-//   const { register, handleSubmit, watch, reset, setValue } = useForm({
-//     defaultValues: {
-//       companyName: "",
-//       teamSize: "",
-//       primaryUseCase: "Coding",
-//       selectedTool: "",
-//       selectedPlan: "",
-//       monthlySpend: "",
-//       seats: "",
-//     },
-//   });
-
-//   // Watch selected tool
-//   const selectedTool = watch("selectedTool");
-
-//   // Load data from localStorage
-//   useEffect(() => {
-//     const savedData = localStorage.getItem("credex-audit-form");
-
-//     if (savedData) {
-//       reset(JSON.parse(savedData));
-//     }
-//   }, [reset]);
-
-//   // Watch all form data    
-//   const formValues = watch();
-
-//   // Save to localStorage
-//   useEffect(() => {
-//     localStorage.setItem("credex-audit-form", JSON.stringify(formValues));
-//   }, [formValues]);
-
-//   const onSubmit = (data) => {
-//     console.log(data);
-//     alert("Audit Submitted");
-//   };
-
-//   const clearData = () => {
-//     localStorage.removeItem("credex-audit-form");
-
-//     reset({
-//       companyName: "",
-//       teamSize: "",
-//       primaryUseCase: "Coding",
-//       selectedTool: "",
-//       selectedPlan: "",
-//       monthlySpend: "",
-//       seats: "",
-//     });
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-slate-950 text-white px-4 py-10">
-//       <div className="max-w-7xl mx-auto">
-//         <div className="mb-10 text-center">
-//           <h1 className="text-4xl font-bold mb-3">Credex AI Tool Audit</h1>
-
-//           <p className="text-slate-400 text-lg">
-//             Track AI tool usage, plans, spending, and seats.
-//           </p>
-//         </div>
-
-//         <form
-//           onSubmit={handleSubmit(onSubmit)}
-//           className="bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl"
-//         >
-//           {/* Company Details */}
-//           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-//             <div>
-//               <label className="block mb-2 text-sm text-slate-300">
-//                 Company Name
-//               </label>
-
-//               <input
-//                 type="text"
-//                 placeholder="Enter company name"
-//                 {...register("companyName")}
-//                 className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-cyan-500"
-//               />
-//             </div>
-
-//             <div>
-//               <label className="block mb-2 text-sm text-slate-300">
-//                 Team Size
-//               </label>
-
-//               <input
-//                 type="number"
-//                 placeholder="e.g. 25"
-//                 {...register("teamSize")}
-//                 className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-cyan-500"
-//               />
-//             </div>
-
-//             <div>
-//               <label className="block mb-2 text-sm text-slate-300">
-//                 Primary Use Case
-//               </label>
-
-//               <select
-//                 {...register("primaryUseCase")}
-//                 className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-cyan-500"
-//               >
-//                 <option>Coding</option>
-//                 <option>Writing</option>
-//                 <option>Data</option>
-//                 <option>Research</option>
-//                 <option>Mixed</option>
-//               </select>
-//             </div>
-//           </div>
-
-//           {/* Tool Details */}
-//           <div className="bg-slate-800/60 border border-slate-700 rounded-3xl p-8 mb-10">
-//             <h2 className="text-2xl font-semibold mb-8">AI Tool Details</h2>
-
-//             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//               {/* Tool */}
-//               <div>
-//                 <label className="block mb-2 text-sm text-slate-300">
-//                   Select Tool
-//                 </label>
-
-//                 <select
-//                   {...register("selectedTool")}
-//                   onChange={(e) => {
-//                     setValue("selectedTool", e.target.value);
-//                     setValue("selectedPlan", "");
-//                   }}
-//                   className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-cyan-500"
-//                 >
-//                   <option value="">Choose Tool</option>
-
-//                   {Object.keys(tools).map((tool) => (
-//                     <option key={tool} value={tool}>
-//                       {tool}
-//                     </option>
-//                   ))}
-//                 </select>
-//               </div>
-
-//               {/* Plan */}
-//               <div>
-//                 <label className="block mb-2 text-sm text-slate-300">
-//                   Select Plan
-//                 </label>
-
-//                 <select
-//                   {...register("selectedPlan")}
-//                   className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-cyan-500"
-//                 >
-//                   <option value="">Choose Plan</option>
-
-//                   {selectedTool &&
-//                     tools[selectedTool]?.map((plan) => (
-//                       <option key={plan} value={plan}>
-//                         {plan}
-//                       </option>
-//                     ))}
-//                 </select>
-//               </div>
-
-//               {/* Monthly Spend */}
-//               <div>
-//                 <label className="block mb-2 text-sm text-slate-300">
-//                   Monthly Spend ($)
-//                 </label>
-
-//                 <input
-//                   type="number"
-//                   placeholder="e.g. 200"
-//                   {...register("monthlySpend")}
-//                   className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-cyan-500"
-//                 />
-//               </div>
-
-//               {/* Seats */}
-//               <div>
-//                 <label className="block mb-2 text-sm text-slate-300">
-//                   Number of Seats
-//                 </label>
-
-//                 <input
-//                   type="number"
-//                   placeholder="e.g. 15"
-//                   {...register("seats")}
-//                   className="w-full bg-slate-900 border border-slate-700 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-cyan-500"
-//                 />
-//               </div>
-//             </div>
-//           </div>
-
-//           {/* Footer Buttons */}
-//           <div className="flex justify-end gap-4 mt-10">
-//             <button
-//               type="button"
-//               onClick={clearData}
-//               className="px-6 py-3 rounded-xl border border-slate-600 hover:bg-slate-800 transition"
-//             >
-//               Clear Data
-//             </button>
-
-//             <button
-//               type="submit"
-//               className="px-8 py-3 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-black font-semibold transition"
-//             >
-//               Submit Audit
-//             </button>
-//           </div>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default SpendForm;
-
-
-
-
-
-
-
-
-
-// SpendForm.jsx
-
-import { useState } from "react";
 import {
   Menu,
   Search,
@@ -253,6 +12,7 @@ import {
   Trash2,
   CheckCircle,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const toolOptions = [
   "Cursor",
@@ -264,45 +24,46 @@ const toolOptions = [
 ];
 
 export default function SpendForm() {
-  const [tools, setTools] = useState([
-    {
-      tool: "Cursor",
-      plan: "Pro ($20/mo)",
-      spend: 20,
-      seats: 1,
+  const savedData = JSON.parse(localStorage.getItem("credex-form"));
+
+  // React Hook Form
+  const { register, control, handleSubmit, watch } = useForm({
+    defaultValues: savedData || {
+      teamSize: "1-10",
+      useCase: "Mixed",
+
+      tools: [
+        {
+          tool: "Curser",
+          plan: "Pro",
+          spend: 0,
+          seats: 0,
+        },
+      ],
     },
-    {
-      tool: "Claude",
-      plan: "Pro",
-      spend: 20,
-      seats: 1,
-    },
-  ]);
+  });
 
-  // Add Tool
-  const addTool = () => {
-    setTools([
-      ...tools,
-      {
-        tool: "ChatGPT",
-        plan: "Pro",
-        spend: 20,
-        seats: 1,
-      },
-    ]);
-  };
+  // Dynamic Fields
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "tools",
+  });
 
-  // Delete Tool
-  const removeTool = (index) => {
-    const updated = tools.filter((_, i) => i !== index);
-    setTools(updated);
-  };
+  // Watch all form values
+  const formData = watch();
 
-  // Update Input
-  const updateTool = (index, field, value) => {
-    const updated = [...tools];
-    updated[index][field] = value;
-    setTools(updated);
+  // Auto Save to localStorage
+  useEffect(() => {
+    localStorage.setItem("credex-form", JSON.stringify(formData));
+  }, [formData]);
+
+  // Submit
+  const onSubmit = (data) => {
+    console.log(data);
+
+    // settools(data.tools);
+    // console.log(tools);
+    // localStorage.setItem("credex-tools", JSON.stringify(tools));
   };
 
   return (
@@ -330,7 +91,7 @@ export default function SpendForm() {
         </div>
       </aside>
 
-      {/* MAIN AREA */}
+      {/* MAIN */}
       <div className="flex-1 lg:ml-64">
         {/* HEADER */}
         <header className="sticky top-0 z-20 bg-white/80 backdrop-blur border-b border-gray-200">
@@ -338,6 +99,7 @@ export default function SpendForm() {
             {/* Left */}
             <div className="flex items-center gap-3">
               <Menu className="lg:hidden" />
+
               <h1 className="text-2xl font-bold">Credex</h1>
             </div>
 
@@ -345,6 +107,7 @@ export default function SpendForm() {
             <div className="flex items-center gap-6">
               <div className="hidden md:flex items-center gap-2 border rounded-lg px-3 py-2 bg-gray-50">
                 <Search size={18} className="text-gray-500" />
+
                 <input
                   type="text"
                   placeholder="Search audits..."
@@ -359,13 +122,14 @@ export default function SpendForm() {
           </div>
         </header>
 
-        {/* CONTENT */}
-        <main className="max-w-7xl mx-auto p-6">
+        {/* FORM */}
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="max-w-7xl mx-auto p-6"
+        >
           {/* Heading */}
           <div className="mb-10">
-            <h2 className="text-4xl font-bold mb-2">
-              Start Your SaaS Audit
-            </h2>
+            <h2 className="text-4xl font-bold mb-2">Start Your SaaS Audit</h2>
 
             <p className="text-gray-600">
               Enter your current tool usage to uncover optimization
@@ -377,9 +141,8 @@ export default function SpendForm() {
           <section className="bg-white border border-gray-200 rounded-2xl shadow-sm p-8 mb-8">
             <div className="flex items-center gap-3 mb-6">
               <Building2 className="text-green-600" />
-              <h3 className="text-2xl font-semibold">
-                Global Parameters
-              </h3>
+
+              <h3 className="text-2xl font-semibold">Global Parameters</h3>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
@@ -389,7 +152,10 @@ export default function SpendForm() {
                   Team Size
                 </label>
 
-                <select className="w-full border border-gray-300 rounded-xl p-4 bg-white outline-none focus:border-green-500">
+                <select
+                  {...register("teamSize")}
+                  className="w-full border border-gray-300 rounded-xl p-4 bg-white outline-none focus:border-green-500"
+                >
                   <option>1-10</option>
                   <option>11-50</option>
                   <option>51-200</option>
@@ -403,8 +169,12 @@ export default function SpendForm() {
                   Primary Use Case
                 </label>
 
-                <select className="w-full border border-gray-300 rounded-xl p-4 bg-white outline-none focus:border-green-500">
+                <select
+                  {...register("useCase")}
+                  className="w-full border border-gray-300 rounded-xl p-4 bg-white outline-none focus:border-green-500"
+                >
                   <option>Mixed</option>
+                  <option>Data</option>
                   <option>Coding</option>
                   <option>Writing</option>
                   <option>Research</option>
@@ -419,13 +189,21 @@ export default function SpendForm() {
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
               <div className="flex items-center gap-3">
                 <Boxes className="text-green-600" />
-                <h3 className="text-2xl font-semibold">
-                  Your Tools
-                </h3>
+
+                <h3 className="text-2xl font-semibold">Your Tools</h3>
               </div>
 
+              {/* Add Tool */}
               <button
-                onClick={addTool}
+                type="button"
+                onClick={() =>
+                  append({
+                    tool: "ChatGPT",
+                    plan: "Pro",
+                    spend: 20,
+                    seats: 1,
+                  })
+                }
                 className="flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-full hover:opacity-90 transition"
               >
                 <Plus size={18} />
@@ -435,30 +213,23 @@ export default function SpendForm() {
 
             {/* TOOL ROWS */}
             <div className="space-y-4">
-              {tools.map((tool, index) => (
+              {fields.map((field, index) => (
                 <ToolRow
-                  key={index}
-                  tool={tool}
+                  key={field.id}
                   index={index}
-                  updateTool={updateTool}
-                  removeTool={removeTool}
+                  register={register}
+                  remove={remove}
                 />
               ))}
-            </div>
-
-            {/* Empty State */}
-            <div className="mt-8 border-2 border-dashed border-gray-300 rounded-2xl p-10 flex flex-col items-center text-center">
-              <Plus size={40} className="text-gray-400 mb-4" />
-
-              <p className="text-gray-500">
-                Missing a tool? Add a custom row above.
-              </p>
             </div>
           </section>
 
           {/* SUBMIT */}
           <div className="flex flex-col items-center mt-10 gap-4">
-            <button className="bg-black text-white px-10 py-5 rounded-2xl text-lg font-semibold shadow-lg hover:scale-[0.98] transition">
+            <button
+              type="submit"
+              className="bg-black text-white px-10 py-5 rounded-2xl text-lg font-semibold shadow-lg hover:scale-[0.98] transition"
+            >
               Generate Audit
             </button>
 
@@ -472,14 +243,12 @@ export default function SpendForm() {
           <div className="mt-20 bg-[#0d1c32] rounded-3xl overflow-hidden grid md:grid-cols-2 text-white">
             {/* LEFT */}
             <div className="p-10">
-              <h2 className="text-4xl font-bold mb-4">
-                Unlock Deep Savings
-              </h2>
+              <h2 className="text-4xl font-bold mb-4">Unlock Deep Savings</h2>
 
               <p className="text-gray-300 mb-6 leading-relaxed">
-                Our audit engine cross-references your stack against
-                benchmarked companies to find overlaps between
-                Copilot, Cursor and ChatGPT plans.
+                Our audit engine cross-references your stack against benchmarked
+                companies to find overlaps between Copilot, Cursor and ChatGPT
+                plans.
               </p>
 
               <div className="space-y-4">
@@ -504,13 +273,14 @@ export default function SpendForm() {
               />
             </div>
           </div>
-        </main>
+        </form>
 
         {/* FOOTER */}
         <footer className="border-t border-gray-200 bg-white mt-20">
           <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row justify-between items-center gap-4">
             <div>
               <h3 className="font-bold">CREDEX</h3>
+
               <p className="text-gray-500 text-sm">
                 © 2024 Credex Technologies Inc.
               </p>
@@ -518,7 +288,9 @@ export default function SpendForm() {
 
             <div className="flex gap-6 text-gray-500">
               <a href="#">Privacy Policy</a>
+
               <a href="#">Terms of Service</a>
+
               <a href="#">Security</a>
             </div>
           </div>
@@ -539,18 +311,14 @@ function SidebarItem({ title, active }) {
       }`}
     >
       <div className="w-2 h-2 rounded-full bg-current"></div>
+
       {title}
     </button>
   );
 }
 
 // TOOL ROW
-function ToolRow({
-  tool,
-  index,
-  updateTool,
-  removeTool,
-}) {
+function ToolRow({ index, register, remove }) {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 bg-[#f2f4f6] border border-transparent hover:border-gray-300 rounded-2xl p-5 items-end transition">
       {/* Tool */}
@@ -560,14 +328,11 @@ function ToolRow({
         </label>
 
         <select
-          value={tool.tool}
-          onChange={(e) =>
-            updateTool(index, "tool", e.target.value)
-          }
+          {...register(`tools.${index}.tool`)}
           className="w-full border border-gray-300 rounded-xl p-3 bg-white"
         >
-          {toolOptions.map((item) => (
-            <option key={item}>{item}</option>
+          {toolOptions.map((tool) => (
+            <option key={tool}>{tool}</option>
           ))}
         </select>
       </div>
@@ -579,10 +344,7 @@ function ToolRow({
         </label>
 
         <select
-          value={tool.plan}
-          onChange={(e) =>
-            updateTool(index, "plan", e.target.value)
-          }
+          {...register(`tools.${index}.plan`)}
           className="w-full border border-gray-300 rounded-xl p-3 bg-white"
         >
           <option>Free</option>
@@ -599,16 +361,11 @@ function ToolRow({
         </label>
 
         <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2">
-            $
-          </span>
+          <span className="absolute left-3 top-1/2 -translate-y-1/2">$</span>
 
           <input
             type="number"
-            value={tool.spend}
-            onChange={(e) =>
-              updateTool(index, "spend", e.target.value)
-            }
+            {...register(`tools.${index}.spend`)}
             className="w-full border border-gray-300 rounded-xl p-3 pl-8 bg-white"
           />
         </div>
@@ -622,10 +379,7 @@ function ToolRow({
 
         <input
           type="number"
-          value={tool.seats}
-          onChange={(e) =>
-            updateTool(index, "seats", e.target.value)
-          }
+          {...register(`tools.${index}.seats`)}
           className="w-full border border-gray-300 rounded-xl p-3 bg-white"
         />
       </div>
@@ -633,7 +387,8 @@ function ToolRow({
       {/* Delete */}
       <div className="lg:col-span-2 flex justify-end">
         <button
-          onClick={() => removeTool(index)}
+          type="button"
+          onClick={() => remove(index)}
           className="p-3 rounded-xl text-red-500 hover:bg-red-100 transition"
         >
           <Trash2 />
