@@ -1,3 +1,6 @@
+const { runAudit } = require("./auditEngine");
+const Audit = require("../model/Audit.model");
+
 const PRICING_DATA = {
   Cursor: {
     Hobby: {
@@ -197,76 +200,103 @@ const PRICING_DATA = {
 const createAudit = async (req, res) => {
   try {
     const { tools } = req.body;
-
     if (!tools || tools.length === 0) {
       return res.status(400).json({ error: "No tools provided" });
     }
 
-    //  find alternatives and calculate savings
-    const processedTools = tools.map((tool) => {
-      const toolData = PRICING_DATA[tool.provider];
-      let alternativeCost = tool.monthlyCost; // default: no savings
-      let recommendedAlternative = "No alternative found";
+    // Audit Engine
+    const auditResult = runAudit(tools);
 
-      if (toolData && toolData[tool.currentPlan]) {
-        const alternatives = toolData[tool.currentPlan].alternatives;
-        if (Object.keys(alternatives).length > 0) {
-          // Get first alternative
-          recommendedAlternative = Object.keys(alternatives)[0];
-          alternativeCost = alternatives[recommendedAlternative];
-        }
-      }
-
-      const monthlySavings =
-        (tool.monthlyCost - alternativeCost) * tool.teamSize;
-      const yearlySavings = monthlySavings * 12;
-
-      return {
-        name: tool.provider,
-        currentPlan: tool.currentPlan,
-        monthlyCost: tool.monthlyCost,
-        teamSize: tool.teamSize,
-        useCase: tool.useCase,
-        recommendedAlternative,
-        alternativeCost,
-        monthlySavings,
-        yearlySavings,
-      };
+    const audit = new Audit({
+      tools: auditResult.results,
+      totalMonthlySavings: auditResult.totalMonthlySavings,
+      totalYearlySavings: auditResult.totalYearlySavings,
     });
 
-    // Calculate totals
-    const totalMonthlySavings = processedTools.reduce(
-      (sum, t) => sum + t.monthlySavings,
-      0,
-    );
-    const totalYearlySavings = processedTools.reduce(
-      (sum, t) => sum + t.yearlySavings,
-      0,
-    );
-
-    // // Create audit
-    // const audit = new Audit({
-    //   tools: processedTools,
-    //   totalMonthlySavings,
-    //   totalYearlySavings,
-    //   aiSummary: "", // Will be filled later
-    // });
-
-    // await audit.save();
+    await audit.save();
 
     res.status(201).json({
       success: true,
-      processedTools,
-      // auditId: audit._id,
-      message: "Audit created successfully",
+      auditId: audit._id,
+      auditResult,
     });
   } catch (error) {
-    console.error("Error creating audit:", error);
+    console.error("Audit creation error:", error);
     res.status(500).json({ success: false, error: error.message });
   }
 };
 
+// const createAudit = async (req, res) => {
+//   try {
+//     const { tools } = req.body;
 
+//     if (!tools || tools.length === 0) {
+//       return res.status(400).json({ error: "No tools provided" });
+//     }
+
+//     //  find alternatives and calculate savings
+//     const processedTools = tools.map((tool) => {
+//       const toolData = PRICING_DATA[tool.provider];
+//       let alternativeCost = tool.monthlyCost; // default: no savings
+//       let recommendedAlternative = "No alternative found";
+
+//       if (toolData && toolData[tool.currentPlan]) {
+//         const alternatives = toolData[tool.currentPlan].alternatives;
+//         if (Object.keys(alternatives).length > 0) {
+//           // Get first alternative
+//           recommendedAlternative = Object.keys(alternatives)[0];
+//           alternativeCost = alternatives[recommendedAlternative];
+//         }
+//       }
+
+//       const monthlySavings =
+//         (tool.monthlyCost - alternativeCost) * tool.teamSize;
+//       const yearlySavings = monthlySavings * 12;
+
+//       return {
+//         name: tool.provider,
+//         currentPlan: tool.currentPlan,
+//         monthlyCost: tool.monthlyCost,
+//         teamSize: tool.teamSize,
+//         useCase: tool.useCase,
+//         recommendedAlternative,
+//         alternativeCost,
+//         monthlySavings,
+//         yearlySavings,
+//       };
+//     });
+
+//     // Calculate totals
+//     const totalMonthlySavings = processedTools.reduce(
+//       (sum, t) => sum + t.monthlySavings,
+//       0,
+//     );
+//     const totalYearlySavings = processedTools.reduce(
+//       (sum, t) => sum + t.yearlySavings,
+//       0,
+//     );
+
+//     // // Create audit
+//     // const audit = new Audit({
+//     //   tools: processedTools,
+//     //   totalMonthlySavings,
+//     //   totalYearlySavings,
+//     //   aiSummary: "", // Will be filled later
+//     // });
+
+//     // await audit.save();
+
+//     res.status(201).json({
+//       success: true,
+//       processedTools,
+//       // auditId: audit._id,
+//       message: "Audit created successfully",
+//     });
+//   } catch (error) {
+//     console.error("Error creating audit:", error);
+//     res.status(500).json({ success: false, error: error.message });
+//   }
+// };
 
 module.exports = {
   createAudit,

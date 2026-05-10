@@ -60,10 +60,6 @@ export default function SpendForm() {
   // Submit
   const onSubmit = (data) => {
     console.log(data);
-
-    // settools(data.tools);
-    // console.log(tools);
-    // localStorage.setItem("credex-tools", JSON.stringify(tools));
   };
 
   return (
