@@ -54,8 +54,6 @@
 - Create audit result cards and report UI
 - Begin integrating recommendation system for cheaper plans/tools
 
-
-
 ## Day 3 — 2026-05-10
 
 **Hours worked:**  
@@ -77,7 +75,6 @@
   - Savings calculations
   - Alternative recommendations
 - Added logic for calculating monthly and yearly savings dynamically
-
 
 **What I learned:**
 
@@ -104,3 +101,58 @@
 - Add AI-generated audit summaries
 - Connect backend audit response with frontend result dashboard
 - Handle more edge cases in pricing comparison and savings calculation
+## Day 4 — 2026-05-10
+
+**Hours worked:** 5-6 Hours
+
+## What I did
+
+- Worked on the frontend UI of the project.
+- Created the tool selection form where users can:
+  - Select a tool
+  - Select a plan
+  - Enter team size
+  - Enter monthly cost
+- Improved form handling and frontend structure in React.
+- Worked on backend controller and API flow.
+- Built and improved the Audit Engine logic.
+- Added logic for:
+  - Tool and plan checking
+  - Team size validation
+  - Price comparison
+  - Alternative recommendations
+  - Monthly and yearly savings
+- Improved the audit reasoning so results feel more realistic instead of only comparing prices.
+- Simplified a lot of backend code because some parts became too over-engineered.
+- Improved API response structure for frontend rendering.
+- Connected frontend and backend properly and tested the audit flow.
+- Used AI tools like :contentReference[oaicite:0]{index=0} ChatGPT and :contentReference[oaicite:1]{index=1} Claude to brainstorm and improve the audit logic.
+- Since I was not fully familiar with SaaS audit systems, I used AI discussions to better understand:
+  - pricing comparison logic
+  - savings calculations
+  - recommendation logic
+  - validation scenarios
+  - practical audit reasoning
+- Reworked and simplified many AI-generated ideas to better match my own understanding and coding style.
+
+## Challenges Faced
+
+- Some parts of the audit logic became too complex at first.
+- It was difficult to balance good logic with simple readable code.
+- Handling multiple audit conditions together took time.
+
+## Learnings
+
+- Learned more about backend structure and controller logic.
+- Better understanding of how pricing audit systems can work.
+- Learned how to separate business logic from controllers.
+- Improved understanding of API responses and savings calculations.
+- Learned that simpler and readable code is often better than overly advanced code.
+- Learned how AI tools can help in brainstorming logic and architecture during development.
+
+## Next Plan
+
+- Improve the audit result UI.
+- Add better result cards and summaries.
+- Add audit history feature.
+- Improve recommendation quality further.

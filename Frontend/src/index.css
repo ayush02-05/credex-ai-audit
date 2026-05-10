@@ -1,1 +1,26 @@
 @import "tailwindcss";
+
+:root {
+  --font-display: "Space Grotesk", "Segoe UI", sans-serif;
+  --font-body: "Plus Jakarta Sans", "Segoe UI", sans-serif;
+  --ink: #101418;
+  --muted: #5a6168;
+  --accent: #0f6b4a;
+  --accent-dark: #0b4e37;
+  --surface: #f7f5f2;
+  --card: #ffffff;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background-color: var(--surface);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.shadow-soft {
+  box-shadow: 0 20px 50px -30px rgba(15, 27, 44, 0.45);
+}

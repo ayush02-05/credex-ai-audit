@@ -1,13 +1,11 @@
-import React from "react";
-import SpendForm from "./components/SpendForm";
-import Result from "./components/Result";
+import { BrowserRouter } from "react-router-dom";
+import MainRouts from "./MainRouts";
 
 function App() {
   return (
-    <div>
-      <SpendForm />
-      {/* <Result /> */}
-    </div>
+    <BrowserRouter>
+      <MainRouts />
+    </BrowserRouter>
   );
 }
 
