@@ -224,12 +224,9 @@ function runAudit(tools) {
 
   return {
     results,
-
-    summary: {
-      totalMonthlySavings,
-      totalYearlySavings,
-      toolsAudited: results.length,
-    },
+    totalMonthlySavings,
+    totalYearlySavings,
+    toolsAudited: results.length,
   };
 }
 

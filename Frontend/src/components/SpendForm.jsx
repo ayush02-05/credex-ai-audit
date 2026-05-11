@@ -1,6 +1,8 @@
-import { useFieldArray, useForm } from "react-hook-form";
-import { Building2, Boxes, Plus, Trash2, CheckCircle } from "lucide-react";
-import { useEffect } from "react";
+import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Boxes, Plus, Trash2, CheckCircle, Sparkles } from "lucide-react";
+import { PRICING_DATA } from "./pricingDataFrontend";
+import { useNavigate } from "react-router-dom";
 
 const toolOptions = [
   "Cursor",
@@ -11,298 +13,312 @@ const toolOptions = [
   "OpenAI API",
 ];
 
+const defaultTool = {
+  name: "ChatGPT",
+  currentPlan: "Team",
+  monthlyCost: 40,
+  teamSize: 25,
+  useCase: "coding",
+};
+
 export default function SpendForm() {
   const savedData = JSON.parse(localStorage.getItem("credex-form"));
 
-  // React Hook Form
-  const { register, control, handleSubmit, watch } = useForm({
-    defaultValues: savedData || {
-      teamSize: "1-10",
-      useCase: "Mixed",
+  const navigate = useNavigate();
 
-      tools: [
-        {
-          tool: "Curser",
-          plan: "Pro",
-          spend: 0,
-          seats: 0,
-        },
-      ],
+  // SIMPLE STATE FOR DYNAMIC ROWS
+  const [tools, setTools] = useState(savedData?.tools || [defaultTool]);
+
+  // ONLY useForm
+  const { register, handleSubmit, watch, reset } = useForm({
+    defaultValues: savedData || {
+      tools: [defaultTool],
     },
   });
 
-  // Dynamic Fields
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "tools",
-  });
+  const watchedTools = watch("tools");
 
-  // Watch all form values
+  // Sync form when tools change
+  useEffect(() => {
+    reset({ tools });
+  }, [tools, reset]);
+
+  // Persist form data
   const formData = watch();
 
-  // Auto Save to localStorage
   useEffect(() => {
     localStorage.setItem("credex-form", JSON.stringify(formData));
   }, [formData]);
 
-  // Submit
+  // Add Tool
+  const addTool = () => {
+    setTools([
+      ...tools,
+      {
+        name: "ChatGPT",
+        currentPlan: "Pro",
+        monthlyCost: 20,
+        teamSize: 1,
+        useCase: "coding",
+      },
+    ]);
+  };
+
+  // Remove Tool
+  const removeTool = (index) => {
+    const updatedTools = tools.filter((_, i) => i !== index);
+
+    setTools(updatedTools.length > 0 ? updatedTools : [defaultTool]);
+  };
+
   const onSubmit = (data) => {
-    console.log(data);
+    console.log("Submitted Data:", data);
+
+    /*
+      FINAL OUTPUT:
+      {
+        tools: [
+          {
+            name: "ChatGPT",
+            currentPlan: "Team",
+            monthlyCost: 40,
+            teamSize: 25,
+            useCase: "coding"
+          }
+        ]
+      }
+    */
   };
 
   return (
-    <div className="min-h-screen bg-[#f7f5f2] text-[#101418] relative overflow-hidden">
-      <div className="pointer-events-none absolute -top-32 left-10 h-72 w-72 rounded-full bg-[#0f6b4a]/15 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[#1f2937]/10 blur-[120px]" />
+    <div className="min-h-screen bg-[#f7f5f2] relative overflow-hidden text-[#101418]">
+      {/* BACKGROUND */}
+      <div className="absolute -top-32 left-10 h-72 w-72 rounded-full bg-[#0f6b4a]/10 blur-3xl" />
+
+      <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-black/5 blur-[120px]" />
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="relative z-10 max-w-6xl mx-auto px-6 py-12"
+        className="relative z-10 max-w-7xl mx-auto px-6 py-10"
       >
-        <div className="mb-10 flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+        {/* TOP HEADER */}
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6 mb-10">
           <div>
-            <span className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.35em] text-[#0f6b4a] bg-[#e6f2ed] px-3 py-1 rounded-full">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#e8f5ef] text-[#0f6b4a] text-xs tracking-[0.3em] uppercase font-semibold">
               Credex Audit
-            </span>
+            </div>
 
-            <h2 className="font-display text-4xl md:text-5xl font-bold mt-4">
-              Start Your SaaS Audit
-            </h2>
+            <h1 className="text-5xl font-black tracking-tight mt-5 leading-tight">
+              Analyze Your AI Tool Spend
+            </h1>
 
-            <p className="text-[#5a6168] mt-3 max-w-2xl">
-              Enter your current tool usage to uncover optimization
-              opportunities and align spend with real usage.
+            <p className="text-[#5a6168] mt-4 max-w-2xl text-lg leading-relaxed">
+              Add your current AI stack to identify redundant subscriptions,
+              pricing inefficiencies, and optimization opportunities.
             </p>
           </div>
 
-          <div className="bg-white/80 border border-white/60 rounded-2xl p-4 shadow-soft backdrop-blur-sm">
+          <div className="bg-white border border-[#ececec] rounded-3xl px-5 py-4 shadow-sm min-w-[240px]">
             <p className="text-xs uppercase tracking-[0.25em] text-[#5a6168]">
               Status
             </p>
 
-            <div className="mt-2 flex items-center gap-2 text-[#0f6b4a] text-sm font-semibold">
-              <CheckCircle size={16} />
+            <div className="flex items-center gap-2  text-[#0f6b4a] font-semibold">
+              <CheckCircle size={18} />
               Auto-save enabled
             </div>
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-12 gap-6">
-          <section className="lg:col-span-5 bg-white border border-gray-200 rounded-2xl shadow-soft p-7">
-            <div className="flex items-center gap-3 mb-6">
-              <Building2 className="text-[#0f6b4a]" />
+        {/* INFO CARD */}
+        <div className="bg-[#f4fbf7] border border-[#d7efe3] rounded-2xl p-5 mb-8">
+          {" "}
+          <div className="flex items-start gap-4">
+            {" "}
+            <div className="bg-[#0f6b4a] text-white p-2 rounded-xl">
+              <Sparkles size={18} />{" "}
+            </div>{" "}
+            <div>
+              {" "}
+              <h3 className="font-semibold text-[#0f6b4a] mb-1">
+                AI Spend Intelligence{" "}
+              </h3>{" "}
+              <p className="text-sm text-[#446356] leading-relaxed">
+                Credex analyzes overlapping subscriptions and unused seats to
+                generate recommendations.{" "}
+              </p>{" "}
+            </div>{" "}
+          </div>{" "}
+        </div>
 
-              <h3 className="font-display text-xl font-semibold">
-                Global Parameters
-              </h3>
-            </div>
-
-            <div className="space-y-5">
-              <div>
-                <label className="block text-xs font-semibold text-[#5a6168] mb-2 uppercase tracking-wider">
-                  Team Size
-                </label>
-
-                <select
-                  {...register("teamSize")}
-                  className="w-full border border-gray-300 rounded-xl p-4 bg-white outline-none focus:border-[#0f6b4a]"
-                >
-                  <option>1-10</option>
-                  <option>11-50</option>
-                  <option>51-200</option>
-                  <option>201-500</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-[#5a6168] mb-2 uppercase tracking-wider">
-                  Primary Use Case
-                </label>
-
-                <select
-                  {...register("useCase")}
-                  className="w-full border border-gray-300 rounded-xl p-4 bg-white outline-none focus:border-[#0f6b4a]"
-                >
-                  <option>Mixed</option>
-                  <option>Data</option>
-                  <option>Coding</option>
-                  <option>Writing</option>
-                  <option>Research</option>
-                </select>
-              </div>
-            </div>
-          </section>
-
-          <section className="lg:col-span-7 bg-white border border-gray-200 rounded-2xl shadow-soft p-7">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        {/* MAIN CARD */}
+        <section className="bg-white border border-[#ececec] rounded-[32px] p-8 shadow-sm">
+          {/* SECTION HEADER */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 mb-8">
+            <div>
               <div className="flex items-center gap-3">
-                <Boxes className="text-[#0f6b4a]" />
+                <div className="bg-[#eef8f3] p-3 rounded-2xl">
+                  <Boxes className="text-[#0f6b4a]" />
+                </div>
 
-                <h3 className="font-display text-xl font-semibold">
-                  Your Tools
-                </h3>
+                <div>
+                  <h2 className="text-2xl font-bold">AI Tools & Licenses</h2>
+
+                  <p className="text-sm text-[#5a6168] mt-1">
+                    Add the tools currently used by your team
+                  </p>
+                </div>
               </div>
+            </div>
 
-              <button
-                type="button"
-                onClick={() =>
-                  append({
-                    tool: "ChatGPT",
-                    plan: "Pro",
-                    spend: 20,
-                    seats: 1,
-                  })
-                }
-                className="flex items-center gap-2 bg-[#0f6b4a] text-white px-5 py-2 rounded-full hover:bg-[#0b4e37] transition"
+            <button
+              type="button"
+              onClick={addTool}
+              className="bg-[#0f6b4a] hover:bg-[#0c563b] text-white px-6 py-3 rounded-2xl flex items-center gap-2 font-semibold transition"
+            >
+              <Plus size={18} />
+              Add Tool
+            </button>
+          </div>
+
+          {/* TOOL ROWS */}
+          <div className="space-y-5">
+            {tools.map((tool, index) => (
+              <div
+                key={index}
+                className="border border-[#ececec] rounded-3xl p-6 bg-[#fcfcfc] hover:bg-white hover:shadow-lg transition-all"
               >
-                <Plus size={18} />
-                Add Tool
-              </button>
-            </div>
+                {/* TOP ROW */}
+                <div className="flex items-center justify-between mb-5">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.25em] text-[#5a6168]">
+                      Tool #{index + 1}
+                    </p>
 
-            <div className="space-y-4">
-              {fields.map((field, index) => (
-                <ToolRow
-                  key={field.id}
-                  index={index}
-                  register={register}
-                  remove={remove}
-                />
-              ))}
-            </div>
-          </section>
-        </div>
+                    <h3 className="text-xl font-bold mt-1">
+                      AI Subscription Details
+                    </h3>
+                  </div>
 
-        <div className="flex flex-col items-center mt-10 gap-3">
-          <button
-            type="submit"
-            className="bg-[#101418] text-white px-12 py-4 rounded-2xl text-lg font-semibold shadow-soft hover:-translate-y-0.5 transition"
-          >
-            Generate Audit
-          </button>
+                  <button
+                    type="button"
+                    onClick={() => removeTool(index)}
+                    className="h-11 w-11 rounded-2xl flex items-center justify-center text-red-500 hover:bg-red-50 transition"
+                  >
+                    <Trash2 size={18} />
+                  </button>
+                </div>
 
-          <p className="text-sm text-[#5a6168]">
-            Your progress is saved locally in your browser.
-          </p>
-        </div>
+                {/* FORM GRID */}
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-5">
+                  {/* TOOL */}
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-[0.15em] text-[#5a6168] mb-2">
+                      Tool
+                    </label>
 
-        <div className="mt-14 bg-[#101418] rounded-3xl overflow-hidden grid md:grid-cols-2 text-white shadow-soft">
-          <div className="p-10">
-            <h2 className="font-display text-3xl font-bold mb-4">
-              Unlock Deep Savings
-            </h2>
+                    <select
+                      {...register(`tools.${index}.name`)}
+                      className="w-full border border-gray-300 rounded-2xl p-3.5 bg-white outline-none focus:border-[#0f6b4a]"
+                    >
+                      {toolOptions.map((tool) => (
+                        <option key={tool} value={tool}>
+                          {tool}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-            <p className="text-white/70 mb-6 leading-relaxed">
-              Our audit engine cross-references your stack against benchmarked
-              companies to find overlaps between Copilot, Cursor, and ChatGPT
-              plans.
+                  {/* PLAN */}
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-[0.15em] text-[#5a6168] mb-2">
+                      Current Plan
+                    </label>
+
+                    <select
+                      {...register(`tools.${index}.currentPlan`)}
+                      className="w-full border border-gray-300 rounded-2xl p-3.5 bg-white outline-none focus:border-[#0f6b4a]"
+                    >
+                      {(PRICING_DATA[watchedTools?.[index]?.name] || []).map(
+                        (plan) => (
+                          <option key={plan} value={plan}>
+                            {plan}
+                          </option>
+                        ),
+                      )}
+                    </select>
+                  </div>
+
+                  {/* COST */}
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-[0.15em] text-[#5a6168] mb-2">
+                      Monthly Cost
+                    </label>
+
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#5a6168] font-medium">
+                        $
+                      </span>
+
+                      <input
+                        type="number"
+                        {...register(`tools.${index}.monthlyCost`)}
+                        className="w-full border border-gray-300 rounded-2xl p-3.5 pl-9 bg-white outline-none focus:border-[#0f6b4a]"
+                      />
+                    </div>
+                  </div>
+
+                  {/* TEAM SIZE */}
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-[0.15em] text-[#5a6168] mb-2">
+                      Seats
+                    </label>
+
+                    <input
+                      type="number"
+                      {...register(`tools.${index}.teamSize`)}
+                      className="w-full border border-gray-300 rounded-2xl p-3.5 bg-white outline-none focus:border-[#0f6b4a]"
+                    />
+                  </div>
+
+                  {/* USE CASE */}
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-[0.15em] text-[#5a6168] mb-2">
+                      Use Case
+                    </label>
+
+                    <select
+                      {...register(`tools.${index}.useCase`)}
+                      className="w-full border border-gray-300 rounded-2xl p-3.5 bg-white outline-none focus:border-[#0f6b4a]"
+                    >
+                      <option value="coding">Coding</option>
+                      <option value="writing">Writing</option>
+                      <option value="research">Research</option>
+                      <option value="data">Data</option>
+                      <option value="mixed">Mixed</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* FOOTER */}
+          <div className="mt-10 pt-6 border-t border-[#ececec] flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+            <p className="text-[#5a6168]">
+              {tools.length} AI tools added to this audit
             </p>
 
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 text-[#8dd2b6]">
-                <CheckCircle />
-                Redundancy Detection
-              </div>
-
-              <div className="flex items-center gap-3 text-[#8dd2b6]">
-                <CheckCircle />
-                Seat Consolidation Advice
-              </div>
-            </div>
+            <button
+              type="submit"
+              onClick={() => navigate("/resultPage")}
+              className="bg-[#101418] hover:bg-black text-white px-10 py-4 rounded-2xl text-lg font-semibold transition hover:-translate-y-0.5"
+            >
+              Generate AI Savings Report
+            </button>
           </div>
-
-          <div className="h-[280px] md:h-full">
-            <img
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAuEUffjbtrDI2Hv5BsBntyJG85hI_AQIZZNsj1ZIB0fITWRxvO1KbdDxY3PDUIwxyB7Yymbir8dl8nnUMGEPrOHZ1rTc-zBUBY8X0izcI8MH_yyZB4yfXD3mQ08YIHeEWPAh5dfqAp03JVwI3zyVepU7sMGpvTT0l62hCamWWyQbXqzyAe8pjU3cuEbIXTti-A8OFAOQlczywsMUAsnCxoyEvTpJhx3GABwd00FHN2mABNihmuD1UuhMznABpzK5vWAMAaUeQWIFkF"
-              alt="dashboard"
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </div>
+        </section>
       </form>
-    </div>
-  );
-}
-
-// TOOL ROW
-function ToolRow({ index, register, remove }) {
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 bg-[#f7f5f2] border border-transparent hover:border-gray-200 rounded-2xl p-5 items-end transition">
-      {/* Tool */}
-      <div className="lg:col-span-3">
-        <label className="block text-[11px] font-semibold text-[#5a6168] uppercase tracking-wider mb-2">
-          Select Tool
-        </label>
-
-        <select
-          {...register(`tools.${index}.tool`)}
-          className="w-full border border-gray-300 rounded-xl p-3 bg-white outline-none focus:border-[#0f6b4a]"
-        >
-          {toolOptions.map((tool) => (
-            <option key={tool}>{tool}</option>
-          ))}
-        </select>
-      </div>
-
-      {/* Plan */}
-      <div className="lg:col-span-3">
-        <label className="block text-[11px] font-semibold text-[#5a6168] uppercase tracking-wider mb-2">
-          Plan
-        </label>
-
-        <select
-          {...register(`tools.${index}.plan`)}
-          className="w-full border border-gray-300 rounded-xl p-3 bg-white outline-none focus:border-[#0f6b4a]"
-        >
-          <option>Free</option>
-          <option>Pro</option>
-          <option>Team</option>
-          <option>Enterprise</option>
-        </select>
-      </div>
-
-      {/* Spend */}
-      <div className="lg:col-span-2">
-        <label className="block text-[11px] font-semibold text-[#5a6168] uppercase tracking-wider mb-2">
-          Monthly Spend
-        </label>
-
-        <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#5a6168]">
-            $
-          </span>
-
-          <input
-            type="number"
-            {...register(`tools.${index}.spend`)}
-            className="w-full border border-gray-300 rounded-xl p-3 pl-8 bg-white outline-none focus:border-[#0f6b4a]"
-          />
-        </div>
-      </div>
-
-      {/* Seats */}
-      <div className="lg:col-span-2">
-        <label className="block text-[11px] font-semibold text-[#5a6168] uppercase tracking-wider mb-2">
-          Seats
-        </label>
-
-        <input
-          type="number"
-          {...register(`tools.${index}.seats`)}
-          className="w-full border border-gray-300 rounded-xl p-3 bg-white outline-none focus:border-[#0f6b4a]"
-        />
-      </div>
-
-      {/* Delete */}
-      <div className="lg:col-span-2 flex justify-end">
-        <button
-          type="button"
-          onClick={() => remove(index)}
-          className="p-3 rounded-xl text-red-500 hover:bg-red-100 transition"
-        >
-          <Trash2 />
-        </button>
-      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 const { runAudit } = require("./auditEngine");
 const Audit = require("../model/Audit.model");
+const { generate_Ai_Summary } = require("../service/Ai.service");
 
 const VALID_USE_CASES = ["coding", "writing", "research", "data", "mixed"];
 
@@ -69,8 +70,8 @@ const createAudit = async (req, res) => {
     // Save to DB
     const audit = new Audit({
       tools: auditResult.results,
-      totalMonthlySavings: auditResult.summary.totalMonthlySavings,
-      totalYearlySavings: auditResult.summary.totalYearlySavings,
+      totalMonthlySavings: auditResult.totalMonthlySavings,
+      totalYearlySavings: auditResult.totalYearlySavings,
     });
 
     await audit.save();
@@ -91,6 +92,41 @@ const createAudit = async (req, res) => {
   }
 };
 
+const getAudit = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const audit = await Audit.findById(id);
+    if (!audit) {
+      return res.status(404).json({ error: "Audit not found" });
+    }
+
+    if (!audit.aiSummary) {
+      try {
+        const aiSummary = await generate_Ai_Summary(audit);
+        audit.aiSummary = aiSummary;
+
+        await audit.save();
+      } catch (error) {
+        console.error("Claude API error:", error);
+        audit.aiSummary = "Unable to generate AI summary at this time.";
+      }
+    }
+    res.status(200).json({
+      success: true,
+      audit,
+    });
+  } catch (error) {
+    console.error("Get Audit Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   createAudit,
+  getAudit,
 };
