@@ -1,10 +1,8 @@
 const express = require("express");
-const { createAudit, getAudit } = require("../controllers/Audit.controller");
 const { createLead } = require("../controllers/Lead.controller");
 
 const routes = express.Router();
 
-routes.post("/create", createAudit);
-routes.get("/getaudit/:id", getAudit);
+routes.post("/create", createLead);
 
 module.exports = routes;

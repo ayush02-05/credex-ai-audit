@@ -1,329 +1,199 @@
-// import { ArrowLeft, Download, Share2, Check } from "lucide-react";
-
-// export default function Result() {
-//   return (
-//     <div className="min-h-screen bg-[#f7f5f2] text-[#101418] relative overflow-hidden">
-//       <div className="pointer-events-none absolute -top-32 left-10 h-72 w-72 rounded-full bg-[#0f6b4a]/15 blur-3xl" />
-//       <div className="pointer-events-none absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[#1f2937]/10 blur-[120px]" />
-
-//       <main className="relative z-10 max-w-6xl mx-auto px-6 py-12 space-y-10">
-//         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-//           <div>
-//             <span className="inline-flex items-center gap-2 text-[11px] uppercase tracking-[0.35em] text-[#0f6b4a] bg-[#e6f2ed] px-3 py-1 rounded-full">
-//               Credex Audit
-//             </span>
-
-//             <h1 className="font-display text-4xl md:text-5xl font-bold mt-4">
-//               Optimization Summary
-//             </h1>
-
-//             <p className="text-[#5a6168] mt-3 max-w-2xl">
-//               Audit completed for the engineering team. Review the savings
-//               insights and recommended actions below.
-//             </p>
-//           </div>
-
-//           <div className="flex flex-wrap items-center gap-3">
-//             <button className="inline-flex items-center gap-2 border border-[#e0e3e5] bg-white px-4 py-2 rounded-full text-sm hover:bg-[#f2f4f6] transition">
-//               <ArrowLeft size={16} />
-//               Back
-//             </button>
-
-//             <button className="inline-flex items-center gap-2 border border-[#e0e3e5] bg-white px-4 py-2 rounded-full text-sm hover:bg-[#f2f4f6] transition">
-//               <Download size={16} />
-//               Export Report
-//             </button>
-
-//             <button className="inline-flex items-center gap-2 bg-[#0f6b4a] text-white px-4 py-2 rounded-full text-sm hover:bg-[#0b4e37] transition">
-//               <Share2 size={16} />
-//               Share Results
-//             </button>
-//           </div>
-//         </div>
-
-//         <section className="bg-white border border-[#e0e3e5] rounded-2xl p-8 shadow-soft grid md:grid-cols-2 gap-8">
-//           <div>
-//             <p className="text-xs uppercase tracking-[0.3em] text-[#5a6168] mb-5">
-//               Identified Inefficiencies
-//             </p>
-
-//             <div className="space-y-6">
-//               <div>
-//                 <p className="text-sm text-[#44474d] mb-1">
-//                   Total Annual Savings
-//                 </p>
-
-//                 <h2 className="font-display text-5xl font-bold text-[#0f6b4a]">
-//                   $4,464
-//                   <span className="text-2xl">/yr</span>
-//                 </h2>
-//               </div>
-
-//               <div>
-//                 <p className="text-sm text-[#44474d] mb-1">
-//                   Total Monthly Savings
-//                 </p>
-
-//                 <h3 className="font-display text-3xl font-bold">$372/mo</h3>
-//               </div>
-//             </div>
-//           </div>
-
-//           <div className="bg-[#f7f5f2] rounded-xl p-6">
-//             <h4 className="font-semibold mb-5">Optimization Progress</h4>
-
-//             <div className="mb-6">
-//               <div className="flex justify-between text-sm mb-2">
-//                 <span className="text-[#44474d]">Current Spend</span>
-
-//                 <span className="font-semibold">$7,200/yr</span>
-//               </div>
-
-//               <div className="w-full h-3 bg-gray-300 rounded-full">
-//                 <div className="h-3 bg-gray-500 rounded-full w-full" />
-//               </div>
-//             </div>
-
-//             <div>
-//               <div className="flex justify-between text-sm mb-2">
-//                 <span className="text-[#0f6b4a] font-semibold">
-//                   Optimized Spend
-//                 </span>
-
-//                 <span className="font-bold text-[#0f6b4a]">$2,736/yr</span>
-//               </div>
-
-//               <div className="w-full h-3 bg-gray-300 rounded-full">
-//                 <div className="h-3 bg-[#0f6b4a] rounded-full w-[38%]" />
-//               </div>
-//             </div>
-
-//             <p className="text-right text-xs mt-4 text-[#44474d]">
-//               Potential reduction of 62%
-//             </p>
-//           </div>
-//         </section>
-
-//         <section>
-//           <h3 className="text-xs uppercase tracking-[0.35em] text-[#5a6168] mb-4">
-//             Breakdown Table
-//           </h3>
-
-//           <div className="bg-white border border-[#e0e3e5] rounded-2xl overflow-hidden shadow-soft">
-//             <table className="w-full">
-//               <thead className="bg-[#f7f5f2] border-b border-[#e0e3e5]">
-//                 <tr>
-//                   <TableHead>Tool</TableHead>
-//                   <TableHead>Current Plan</TableHead>
-//                   <TableHead>Current Cost/yr</TableHead>
-//                   <TableHead>Recommended</TableHead>
-//                   <TableHead>Yearly Savings</TableHead>
-//                 </tr>
-//               </thead>
-
-//               <tbody>
-//                 <TableRow
-//                   tool="ChatGPT"
-//                   desc="Overlaps with GitHub Copilot for dev tasks."
-//                   plan="Plus"
-//                   cost="$2,880"
-//                   recommendation="GitHub Copilot Business"
-//                   savings="$144"
-//                 />
-
-//                 <TableRow
-//                   tool="Midjourney"
-//                   desc="Low utilization across engineering team."
-//                   plan="Pro"
-//                   cost="$4,320"
-//                   recommendation="Leonardo AI (Free)"
-//                   savings="$4,320"
-//                 />
-//               </tbody>
-//             </table>
-//           </div>
-//         </section>
-
-//         <section>
-//           <h3 className="text-xs uppercase tracking-[0.35em] text-[#5a6168] mb-4">
-//             AI Summary
-//           </h3>
-
-//           <div className="bg-[#e8f0ff]/55 border-l-4 border-[#0f6b4a] rounded-r-2xl p-6">
-//             <h4 className="font-display text-xl font-bold text-[#0f6b4a] mb-4">
-//               AI Analysis:
-//             </h4>
-
-//             <p className="leading-relaxed text-[#1f2937]">
-//               Your team is spending $4,464/year on AI tools with significant
-//               overlap. Switching Midjourney to the free Leonardo AI tier could
-//               save $4,320/year, while GitHub Copilot Business provides better
-//               dev collaboration than ChatGPT Plus for coding tasks.
-//             </p>
-//           </div>
-//         </section>
-
-//         <section className="bg-white border border-[#e0e3e5] rounded-2xl p-8 grid lg:grid-cols-2 gap-10 shadow-soft">
-//           <div>
-//             <h2 className="font-display text-3xl font-bold mb-4">
-//               Capture these savings with Credex
-//             </h2>
-
-//             <p className="text-[#44474d] leading-relaxed mb-6">
-//               Our experts can help you implement these recommendations
-//               immediately.
-//             </p>
-
-//             <div className="space-y-3">
-//               <Benefit text="Seamless migration planning" />
-//               <Benefit text="License negotiation support" />
-//               <Benefit text="Continuous spend monitoring" />
-//             </div>
-//           </div>
-
-//           <div className="bg-[#f7f5f2] border border-[#e0e3e5] rounded-xl p-6">
-//             <h3 className="font-display text-xl font-semibold mb-6">
-//               Book a Free Consultation
-//             </h3>
-
-//             <form className="space-y-4">
-//               <Input label="Work Email" placeholder="jane@company.com" />
-
-//               <div className="grid grid-cols-2 gap-4">
-//                 <Input label="Company" />
-//                 <Input label="Role" />
-//               </div>
-
-//               <div>
-//                 <label className="block text-sm font-medium mb-2 text-[#44474d]">
-//                   Team Size
-//                 </label>
-
-//                 <select className="w-full border border-[#e0e3e5] rounded-lg px-4 py-3 bg-white outline-none focus:ring-2 focus:ring-[#0f6b4a]">
-//                   <option>Select team size...</option>
-//                   <option>1-10</option>
-//                   <option>11-50</option>
-//                   <option>51-200</option>
-//                   <option>201+</option>
-//                 </select>
-//               </div>
-
-//               <button className="w-full bg-[#101418] text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
-//                 Schedule Call
-//               </button>
-//             </form>
-//           </div>
-//         </section>
-//       </main>
-//     </div>
-//   );
-// }
-
-// /* ---------------- COMPONENTS ---------------- */
-
-// function TableHead({ children }) {
-//   return (
-//     <th className="text-left py-4 px-6 text-xs font-semibold text-[#5a6168] uppercase tracking-wider">
-//       {children}
-//     </th>
-//   );
-// }
-
-// function TableRow({ tool, desc, plan, cost, recommendation, savings }) {
-//   return (
-//     <tr className="border-b border-[#e0e3e5] hover:bg-[#f7f5f2] transition">
-//       <td className="py-5 px-6">
-//         <h4 className="font-semibold">{tool}</h4>
-
-//         <p className="text-xs text-[#5a6168] mt-1">{desc}</p>
-//       </td>
-
-//       <td className="py-5 px-6">{plan}</td>
-
-//       <td className="py-5 px-6">{cost}</td>
-
-//       <td className="py-5 px-6">{recommendation}</td>
-
-//       <td className="py-5 px-6 font-bold text-[#0f6b4a]">{savings}</td>
-//     </tr>
-//   );
-// }
-
-// function Benefit({ text }) {
-//   return (
-//     <div className="flex items-center gap-3">
-//       <Check className="text-[#0f6b4a]" size={18} />
-//       {text}
-//     </div>
-//   );
-// }
-
-// function Input({ label, placeholder }) {
-//   return (
-//     <div>
-//       <label className="block text-sm font-medium mb-2 text-[#44474d]">
-//         {label}
-//       </label>
-
-//       <input
-//         type="text"
-//         placeholder={placeholder}
-//         className="w-full border border-[#e0e3e5] rounded-lg px-4 py-3 bg-white outline-none focus:ring-2 focus:ring-[#0f6b4a]"
-//       />
-//     </div>
-//   );
-// }
-
+import axios from "axios";
 import { ArrowLeft, Download, Share2, Check } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import CubeLoader from "./CubeLoader";
+import { useNavigate, useParams } from "react-router-dom";
+import jsPDF from "jspdf";
+import { toPng } from "html-to-image";
 
-const recommendations = [
-  {
-    tool: "Midjourney",
-    verdict: "High Impact",
-    reasoning:
-      "Very low utilization across the engineering team despite premium pricing.",
-    action: "Move design experimentation to Leonardo AI free tier.",
-    yearlySavings: "$4,320",
-    monthlySavings: "$360",
-  },
-  {
-    tool: "ChatGPT Team",
-    verdict: "Optimization Opportunity",
-    reasoning:
-      "Developers already rely heavily on GitHub Copilot for coding workflows.",
-    action: "Reduce inactive ChatGPT seats and renegotiate renewal.",
-    yearlySavings: "$3,000",
-    monthlySavings: "$250",
-  },
-];
+const formatMoney = (value) => {
+  const number = Number(value);
 
-const breakdown = [
-  {
-    tool: "ChatGPT",
-    desc: "Overlaps with GitHub Copilot for dev tasks.",
-    plan: "Team",
-    cost: "$3,600",
-    recommendation: "Reduce unused seats",
-    savings: "$3,000",
-  },
-  {
-    tool: "Midjourney",
-    desc: "Low utilization across engineering team.",
-    plan: "Pro",
-    cost: "$4,320",
-    recommendation: "Switch to Leonardo AI",
-    savings: "$4,320",
-  },
-];
+  if (!Number.isFinite(number)) {
+    return "$0";
+  }
+
+  return `$${number.toLocaleString()}`;
+};
 
 export default function Result() {
+  const { auditId } = useParams();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [auditData, setAuditData] = useState(null);
+  const [leadSubmitted, setLeadSubmitted] = useState(true);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: "",
+      company: "",
+      role: "",
+      teamSize: "",
+    },
+  });
+  const savedForm = JSON.parse(
+    localStorage.getItem(`credex-form-${auditId}`),
+  ) || { tools: [] };
+
+  useEffect(() => {
+    const fetchAudit = async () => {
+      try {
+        if (!auditId) {
+          setTimeout(() => {
+            setLoading(false);
+          }, 3000);
+          return;
+        }
+
+        const getAuditResult = await axios.get(
+          `${import.meta.env.VITE_API_URL}/audit/getAudit/${auditId}`,
+        );
+        console.log(getAuditResult.data);
+        setAuditData(getAuditResult.data);
+        setTimeout(() => {
+          setLoading(false);
+        }, 3000);
+      } catch (error) {
+        console.log(error);
+        setTimeout(() => {
+          setLoading(false);
+        }, 3000);
+      }
+    };
+
+    fetchAudit();
+  }, [auditId]);
+
+  const currentYearlySpend = savedForm.tools.reduce((total, tool) => {
+    return total + tool.monthlyCost * 12 * tool.teamSize;
+  }, 0);
+
+  const optimizedSpend =
+    currentYearlySpend - (auditData?.audit?.totalYearlySavings || 0);
+
+  const reductionPercentage = currentYearlySpend
+    ? (
+        ((auditData?.audit?.totalYearlySavings || 0) / currentYearlySpend) *
+        100
+      ).toFixed(0)
+    : 0;
+
+  const recommendations = auditData?.audit?.tools || [];
+
+  const breakdownRows = recommendations.map((item, index) => {
+    const formTool = savedForm.tools[index];
+    const yearlyCost = formTool
+      ? formTool.monthlyCost * formTool.teamSize * 12
+      : 0;
+    const yearlySavings = Number(item.yearlySavings) || 0;
+
+    return {
+      tool: item.tool,
+      desc: item.reasoning,
+      plan: item.plan,
+      cost: formatMoney(yearlyCost),
+      recommendation:
+        item.alternativeTool && item.alternativeTool !== item.tool
+          ? `Switch to ${item.alternativeTool} ${item.alternativePlan}`
+          : item.action,
+      savings: formatMoney(yearlySavings),
+    };
+  });
+
+  const maxSpend = Math.max(currentYearlySpend, optimizedSpend);
+
+  const currentWidth = (currentYearlySpend / maxSpend) * 100;
+
+  const optimizedWidth = (optimizedSpend / maxSpend) * 100;
+
+  if (loading) {
+    return <CubeLoader />;
+  }
+
+  if (!auditData?.audit) {
+    return (
+      <div className="min-h-screen bg-[#f7f5f2] text-[#101418] flex items-center justify-center">
+        <p className="text-sm text-[#5a6168]">No audit data available.</p>
+      </div>
+    );
+  }
+  const handleLeadSubmit = async (data) => {
+    try {
+      const payload = {
+        auditId,
+        ...data,
+      };
+
+      await axios.post(`${import.meta.env.VITE_API_URL}/lead/create`, payload);
+      console.log(payload);
+
+      setLeadSubmitted(true);
+      reset(); // clears form
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const shareUrl = `${import.meta.env.VITE_FRONTEND_URL}/result/${auditId}`;
+
+  const handleShare = async () => {
+    // console.log(import.meta.env.VITE_FRONTEND_URL);
+    // console.log(auditId);
+    // console.log(shareUrl);
+    try {
+      await navigator.share({
+        title: "Credex AI Audit",
+        text: "Check out this AI spend optimization audit",
+        url: shareUrl,
+      });
+    } catch {
+      navigator.clipboard.writeText(shareUrl);
+      alert("Link copied!");
+    }
+  };
+
+  const handleDownload = async () => {
+    const element = document.getElementById("report-content");
+
+    if (!element) return;
+
+    try {
+      const dataUrl = await toPng(element, {
+        cacheBust: true,
+        pixelRatio: 2,
+      });
+
+      const pdf = new jsPDF("p", "mm", "a4");
+
+      const imgProps = pdf.getImageProperties(dataUrl);
+
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+      pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight);
+
+      pdf.save("credex-audit-report.pdf");
+    } catch (error) {
+      console.error("PDF export failed:", error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#f7f5f2] text-[#101418] relative overflow-hidden">
       {/* Background Blur */}
-      <div className="pointer-events-none absolute -top-32 left-10 h-72 w-72 rounded-full bg-[#0f6b4a]/15 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[#1f2937]/10 blur-[120px]" />
+      <div className="pointer-events-none absolute -top-32 left-10 h-72 w-72 rounded-full bg-[#0f6b4a]/15 blur-2xl" />
+      <div className="pointer-events-none absolute bottom-0 right-0 h-96 w-96 rounded-full bg-[#1f2937]/10 opacity-50" />
 
-      <main className="relative z-10 max-w-6xl mx-auto px-6 py-12 space-y-10">
+      <main
+        id="report-content"
+        className="relative z-10 max-w-6xl mx-auto px-6 py-12 space-y-10"
+      >
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
           <div>
@@ -342,20 +212,35 @@ export default function Result() {
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            <button className="inline-flex items-center gap-2 border border-[#e0e3e5] bg-white px-4 py-2 rounded-full text-sm hover:bg-[#f2f4f6] transition">
+            <button
+              onClick={() => {
+                navigate("/");
+              }}
+              className="inline-flex items-center gap-2 border border-[#e0e3e5] bg-white px-4 py-2 rounded-full text-sm hover:bg-[#f2f4f6] transition"
+            >
               <ArrowLeft size={16} />
               Back
             </button>
-
-            <button className="inline-flex items-center gap-2 border border-[#e0e3e5] bg-white px-4 py-2 rounded-full text-sm hover:bg-[#f2f4f6] transition">
-              <Download size={16} />
-              Export Report
-            </button>
-
-            <button className="inline-flex items-center gap-2 bg-[#0f6b4a] text-white px-4 py-2 rounded-full text-sm hover:bg-[#0b4e37] transition">
-              <Share2 size={16} />
-              Share Results
-            </button>
+            {leadSubmitted && (
+              <div className="flex gap-2">
+                {/* download */}
+                <button
+                  onClick={handleDownload}
+                  className="inline-flex items-center gap-2 border border-[#e0e3e5] bg-white px-4 py-2 rounded-full text-sm hover:bg-[#f2f4f6] transition"
+                >
+                  <Download size={16} />
+                  Export Report
+                </button>
+                {/* Share */}
+                <button
+                  onClick={handleShare}
+                  className="inline-flex items-center gap-2 bg-[#0f6b4a] text-white px-4 py-2 rounded-full text-sm hover:bg-[#0b4e37] transition"
+                >
+                  <Share2 size={16} />
+                  Share Results
+                </button>{" "}
+              </div>
+            )}
           </div>
         </div>
 
@@ -365,79 +250,30 @@ export default function Result() {
             Executive Summary
           </h3>
 
-          <div className="bg-[#e8f0ff]/55 border-l-4 border-[#0f6b4a] rounded-r-2xl p-6">
-            <h4 className="font-display text-xl font-bold text-[#0f6b4a] mb-4">
-              AI Financial Insight
-            </h4>
+          <div className="relative overflow-hidden rounded-[28px] p-px">
+            {/* Animated Border Glow */}
+            <div className="absolute inset-0 rounded-[28px]" />
 
-            <p className="leading-relaxed text-[#1f2937] text-[15px]">
-              Your team is currently overspending on overlapping AI tools with
-              low utilization across engineering workflows. The largest savings
-              opportunity comes from replacing Midjourney’s premium plan and
-              reducing inactive ChatGPT seats, which together could lower AI
-              software spend by more than 60% annually without impacting team
-              productivity.
-            </p>
-          </div>
-        </section>
+            {/* Main Card */}
+            <div className="relative rounded-[28px] bg-white/70 bg-white p-6 border border-white/40">
+              {/* Glow Effects */}
+              <div className="absolute -top-20 -left-15 w-55 h-55 bg-pink-400/30 rounded-full blur-2xl " />
 
-        {/* Savings Section */}
-        <section className="bg-white border border-[#e0e3e5] rounded-2xl p-8 shadow-soft grid md:grid-cols-2 gap-8">
-          <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-[#5a6168] mb-5">
-              Identified Savings
-            </p>
+              <div className="absolute -bottom-25 -right-10 w-60 h-60 bg-cyan-400/30 rounded-full blur-2xl " />
 
-            <div className="space-y-6">
-              <div>
-                <p className="text-sm text-[#44474d] mb-1">
-                  Total Annual Savings
+              {/* Content */}
+              <div className="relative z-10">
+                <h4 className="font-display text-xl font-bold text-[#0f172a] mb-4">
+                  AI Financial Insight
+                </h4>
+
+                <p className="leading-relaxed text-[#1e293b] text-[15px]">
+                  {auditData.audit.aiSummary}
                 </p>
-
-                <h2 className="font-display text-5xl font-bold text-[#0f6b4a]">
-                  $4,464
-                  <span className="text-2xl">/yr</span>
-                </h2>
               </div>
-
-              <div>
-                <p className="text-sm text-[#44474d] mb-1">Monthly Reduction</p>
-
-                <h3 className="font-display text-3xl font-bold">$372/mo</h3>
-              </div>
-            </div>
-          </div>
-
-          {/* Spend Comparison */}
-          <div className="bg-[#f7f5f2] rounded-xl p-6">
-            <h4 className="font-semibold mb-6">Spend Comparison</h4>
-
-            <div className="space-y-6">
-              <ProgressRow
-                label="Current Spend"
-                value="$7,200/yr"
-                width="100%"
-                color="bg-red-400"
-              />
-
-              <ProgressRow
-                label="Optimized Spend"
-                value="$2,736/yr"
-                width="38%"
-                color="bg-[#0f6b4a]"
-              />
-            </div>
-
-            <div className="mt-8">
-              <span className="text-4xl font-bold text-[#0f6b4a]">62%</span>
-
-              <p className="text-sm text-[#5a6168] mt-1">
-                projected reduction in annual AI spend
-              </p>
             </div>
           </div>
         </section>
-
         {/* Key Recommendations */}
         <section className="space-y-4">
           <div className="flex items-center justify-between">
@@ -446,13 +282,85 @@ export default function Result() {
             </h3>
 
             <span className="text-sm text-[#5a6168]">
-              Prioritized by savings impact
+              High-level optimization opportunities
             </span>
           </div>
 
           {recommendations.map((item, index) => (
             <SimpleActionCard key={index} {...item} />
           ))}
+        </section>
+
+        {/* Savings Section */}
+        <section className="grid md:grid-cols-2 gap-5">
+          {/* Savings Card */}
+          <div className="relative overflow-hidden rounded-3xl border border-[#e5e7eb] bg-white p-6 shadow-sm">
+            {/* Soft Glow */}
+            <div className="absolute -top-10 -right-10 w-32 h-32 bg-emerald-100 blur-2xl rounded-full" />
+
+            <div className="relative z-10">
+              <p className="text-xs uppercase tracking-[0.25em] text-[#6b7280] mb-4">
+                Identified Savings
+              </p>
+
+              <h2 className="text-4xl font-bold tracking-tight text-[#0f6b4a]">
+                ${auditData.audit.totalYearlySavings}
+                <span className="text-lg text-[#6b7280]"> /yr</span>
+              </h2>
+
+              <p className="mt-3 text-sm text-[#6b7280]">
+                Save ${auditData.audit.totalMonthlySavings}/month after
+                optimization
+              </p>
+            </div>
+          </div>
+
+          {/* Spend Comparison */}
+          <div className="rounded-3xl bg-[#0f172a] p-6 text-white relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-cyan-400/10 blur-2xl rounded-full" />
+
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-6">
+                <h4 className="font-medium">Spend Comparison</h4>
+
+                <span className="text-emerald-400 font-semibold text-sm">
+                  {reductionPercentage}% ↓
+                </span>
+              </div>
+
+              <div className="space-y-5">
+                {/* Current */}
+                <div>
+                  <div className="flex justify-between text-sm mb-2 text-slate-300">
+                    <span>Current</span>
+                    <span>${currentYearlySpend}/yr</span>
+                  </div>
+
+                  <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                    <div
+                      className="h-full bg-red-400 rounded-full transition-all duration-700"
+                      style={{ width: `${currentWidth}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Optimized */}
+                <div>
+                  <div className="flex justify-between text-sm mb-2 text-slate-300">
+                    <span>Optimized</span>
+                    <span>${optimizedSpend}/yr</span>
+                  </div>
+
+                  <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-emerald-400 transition-all duration-700"
+                      style={{ width: `${optimizedWidth}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* Breakdown Table */}
@@ -474,7 +382,7 @@ export default function Result() {
               </thead>
 
               <tbody>
-                {breakdown.map((row, i) => (
+                {breakdownRows.map((row, i) => (
                   <TableRow key={i} {...row} />
                 ))}
               </tbody>
@@ -506,16 +414,42 @@ export default function Result() {
               Book a Free Consultation
             </h3>
 
-            <form className="space-y-4">
-              <Input label="Work Email" placeholder="jane@company.com" />
-
-              <div className="grid grid-cols-2 gap-4">
-                <Input label="Company" />
-                <Input label="Role" />
+            <form
+              onSubmit={handleSubmit(handleLeadSubmit)}
+              className="space-y-4"
+            >
+              {" "}
+              <div>
+                <Input
+                  label="Work Email"
+                  placeholder="jane@company.com"
+                  {...register("email", { required: true })}
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-xs">Email is required</p>
+                )}
               </div>
+              <div>
+                <Input
+                  label="Company"
+                  placeholder="xyz company"
+                  {...register("company")}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <Input label="Role" {...register("role")} />
 
-              <button className="w-full bg-[#101418] text-white py-3 rounded-lg font-semibold hover:opacity-90 transition">
-                Schedule Call
+                <Input label="Team Size" {...register("teamSize")} />
+              </div>
+              {/* Honeypot Field */}
+              <div className="hidden">
+                <input type="text" {...register("website")} />
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-[#101418] text-white py-3 rounded-lg font-semibold hover:opacity-90 transition"
+              >
+                Unlock Report
               </button>
             </form>
           </div>
@@ -557,6 +491,8 @@ function SimpleActionCard({
   verdict,
   reasoning,
   action,
+  alternativeTool,
+  alternativePlan,
   yearlySavings,
   monthlySavings,
 }) {
@@ -579,16 +515,25 @@ function SimpleActionCard({
         <p className="text-sm text-[#0f6b4a]">
           <span className="font-semibold">Action:</span> {action}
         </p>
+
+        {alternativeTool && alternativeTool !== tool && (
+          <p className="text-sm text-[#101418] mt-2">
+            <span className="font-semibold">Recommendation:</span>{" "}
+            {alternativeTool} {alternativePlan}
+          </p>
+        )}
       </div>
 
-      <div className="flex flex-col items-end min-w-[120px]">
+      <div className="flex flex-col items-end min-w-30">
         <span className="font-display text-2xl font-bold text-[#0f6b4a]">
-          {yearlySavings}
+          ${yearlySavings}
         </span>
 
         <span className="text-xs text-[#5a6168]">estimated yearly savings</span>
 
-        <span className="text-sm text-[#44474d] mt-1">{monthlySavings}/mo</span>
+        <span className="text-sm text-[#44474d] mt-1">
+          ${monthlySavings}/mo
+        </span>
       </div>
     </div>
   );
@@ -600,7 +545,7 @@ function ProgressRow({ label, value, width, color }) {
       <div className="flex justify-between text-sm mb-2">
         <span className="text-[#44474d]">{label}</span>
 
-        <span className="font-semibold">{value}</span>
+        <span className="font-semibold">{value}/yr</span>
       </div>
 
       <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
@@ -619,7 +564,7 @@ function Benefit({ text }) {
   );
 }
 
-function Input({ label, placeholder }) {
+function Input({ label, placeholder, ...rest }) {
   return (
     <div>
       <label className="block text-sm font-medium mb-2 text-[#44474d]">
@@ -627,9 +572,9 @@ function Input({ label, placeholder }) {
       </label>
 
       <input
-        type="text"
         placeholder={placeholder}
         className="w-full border border-[#e0e3e5] rounded-lg px-4 py-3 bg-white outline-none focus:ring-2 focus:ring-[#0f6b4a]"
+        {...rest}
       />
     </div>
   );

@@ -4,21 +4,26 @@ import { Boxes, Plus, Trash2, CheckCircle, Sparkles } from "lucide-react";
 import { PRICING_DATA } from "./pricingDataFrontend";
 import { useNavigate } from "react-router-dom";
 
+import axios from "axios";
+
 const toolOptions = [
   "Cursor",
   "GitHub Copilot",
   "Claude",
   "ChatGPT",
   "Gemini",
+  "Windsurf",
   "OpenAI API",
+  "Perplexity",
+  "Anthropic API",
 ];
 
 const defaultTool = {
-  name: "ChatGPT",
-  currentPlan: "Team",
-  monthlyCost: 40,
-  teamSize: 25,
-  useCase: "coding",
+  name: "",
+  currentPlan: "",
+  monthlyCost: undefined,
+  teamSize: undefined,
+  useCase: "",
 };
 
 export default function SpendForm() {
@@ -27,12 +32,12 @@ export default function SpendForm() {
   const navigate = useNavigate();
 
   // SIMPLE STATE FOR DYNAMIC ROWS
-  const [tools, setTools] = useState(savedData?.tools || [defaultTool]);
+  const [tools, setTools] = useState(savedData?.tools || []);
 
   // ONLY useForm
   const { register, handleSubmit, watch, reset } = useForm({
     defaultValues: savedData || {
-      tools: [defaultTool],
+      tools: [],
     },
   });
 
@@ -43,59 +48,41 @@ export default function SpendForm() {
     reset({ tools });
   }, [tools, reset]);
 
-  // Persist form data
-  const formData = watch();
-
-  useEffect(() => {
-    localStorage.setItem("credex-form", JSON.stringify(formData));
-  }, [formData]);
-
   // Add Tool
   const addTool = () => {
-    setTools([
-      ...tools,
-      {
-        name: "ChatGPT",
-        currentPlan: "Pro",
-        monthlyCost: 20,
-        teamSize: 1,
-        useCase: "coding",
-      },
-    ]);
+    setTools([...tools, defaultTool]);
   };
 
   // Remove Tool
   const removeTool = (index) => {
     const updatedTools = tools.filter((_, i) => i !== index);
 
-    setTools(updatedTools.length > 0 ? updatedTools : [defaultTool]);
+    setTools(updatedTools);
   };
 
-  const onSubmit = (data) => {
-    console.log("Submitted Data:", data);
+  const onSubmit = async (data) => {
+    try {
+      const createResponse = await axios.post(
+        `${import.meta.env.VITE_API_URL}/audit/create`,
+        data,
+      );
+      const auditId = createResponse.data.auditId;
+      // Persist form data
 
-    /*
-      FINAL OUTPUT:
-      {
-        tools: [
-          {
-            name: "ChatGPT",
-            currentPlan: "Team",
-            monthlyCost: 40,
-            teamSize: 25,
-            useCase: "coding"
-          }
-        ]
-      }
-    */
+      localStorage.setItem(`credex-form-${auditId}`, JSON.stringify(data));
+
+      navigate(`/result/${auditId}`);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <div className="min-h-screen bg-[#f7f5f2] relative overflow-hidden text-[#101418]">
       {/* BACKGROUND */}
-      <div className="absolute -top-32 left-10 h-72 w-72 rounded-full bg-[#0f6b4a]/10 blur-3xl" />
+      <div className="absolute -top-32 left-10 h-72 w-72 rounded-full bg-[#0f6b4a]/10 blur-2xl" />
 
-      <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-black/5 blur-[120px]" />
+      <div className="absolute bottom-0 right-0 h-96 w-96 rounded-full bg-black/5 opacity-50" />
 
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -172,6 +159,7 @@ export default function SpendForm() {
             </div>
 
             <button
+              aria-label="Add AI Tool"
               type="button"
               onClick={addTool}
               className="bg-[#0f6b4a] hover:bg-[#0c563b] text-white px-6 py-3 rounded-2xl flex items-center gap-2 font-semibold transition"
@@ -182,127 +170,159 @@ export default function SpendForm() {
           </div>
 
           {/* TOOL ROWS */}
-          <div className="space-y-5">
-            {tools.map((tool, index) => (
-              <div
-                key={index}
-                className="border border-[#ececec] rounded-3xl p-6 bg-[#fcfcfc] hover:bg-white hover:shadow-lg transition-all"
-              >
-                {/* TOP ROW */}
-                <div className="flex items-center justify-between mb-5">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.25em] text-[#5a6168]">
-                      Tool #{index + 1}
-                    </p>
+          {tools.length > 0 && (
+            <div className="space-y-5">
+              {tools.map((tool, index) => (
+                <div
+                  key={index}
+                  className="border border-[#ececec] rounded-3xl p-6 bg-[#fcfcfc] hover:bg-white hover:shadow-lg transition-all"
+                >
+                  {/* TOP ROW */}
+                  <div className="flex items-center justify-between mb-5">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.25em] text-[#5a6168]">
+                        Tool #{index + 1}
+                      </p>
 
-                    <h3 className="text-xl font-bold mt-1">
-                      AI Subscription Details
-                    </h3>
+                      <h3 className="text-xl font-bold mt-1">
+                        AI Subscription Details
+                      </h3>
+                    </div>
+
+                    <button
+                      type="button"
+                      aria-label={`Remove tool ${index + 1}`}
+                      onClick={() => removeTool(index)}
+                      className="h-11 w-11 rounded-2xl flex items-center justify-center text-red-500 hover:bg-red-50 transition"
+                    >
+                      <Trash2 size={18} />
+                    </button>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={() => removeTool(index)}
-                    className="h-11 w-11 rounded-2xl flex items-center justify-center text-red-500 hover:bg-red-50 transition"
-                  >
-                    <Trash2 size={18} />
-                  </button>
-                </div>
+                  {/* FORM GRID */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-5">
+                    {/* TOOL */}
+                    <div>
+                      <label
+                        htmlFor={`tool-${index}`}
+                        className="block text-xs font-bold uppercase tracking-[0.15em] text-[#5a6168] mb-2"
+                      >
+                        Tool
+                      </label>
 
-                {/* FORM GRID */}
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-5">
-                  {/* TOOL */}
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-[0.15em] text-[#5a6168] mb-2">
-                      Tool
-                    </label>
+                      <select
+                        id={`tool-${index}`}
+                        {...register(`tools.${index}.name`)}
+                        className="w-full border border-gray-300 rounded-2xl p-3.5 bg-white outline-none focus:border-[#0f6b4a]"
+                      >
+                        <option value="">Select Tool</option>
 
-                    <select
-                      {...register(`tools.${index}.name`)}
-                      className="w-full border border-gray-300 rounded-2xl p-3.5 bg-white outline-none focus:border-[#0f6b4a]"
-                    >
-                      {toolOptions.map((tool) => (
-                        <option key={tool} value={tool}>
-                          {tool}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* PLAN */}
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-[0.15em] text-[#5a6168] mb-2">
-                      Current Plan
-                    </label>
-
-                    <select
-                      {...register(`tools.${index}.currentPlan`)}
-                      className="w-full border border-gray-300 rounded-2xl p-3.5 bg-white outline-none focus:border-[#0f6b4a]"
-                    >
-                      {(PRICING_DATA[watchedTools?.[index]?.name] || []).map(
-                        (plan) => (
-                          <option key={plan} value={plan}>
-                            {plan}
+                        {toolOptions.map((tool) => (
+                          <option key={tool} value={tool}>
+                            {tool}
                           </option>
-                        ),
-                      )}
-                    </select>
-                  </div>
+                        ))}
+                      </select>
+                    </div>
 
-                  {/* COST */}
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-[0.15em] text-[#5a6168] mb-2">
-                      Monthly Cost
-                    </label>
+                    {/* PLAN */}
+                    <div>
+                      <label
+                        htmlFor={`plan-${index}`}
+                        className="block text-xs font-bold uppercase tracking-[0.15em] text-[#5a6168] mb-2"
+                      >
+                        Current Plan
+                      </label>
 
-                    <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#5a6168] font-medium">
-                        $
-                      </span>
+                      <select
+                        id={`plan-${index}`}
+                        {...register(`tools.${index}.currentPlan`)}
+                        className="w-full border border-gray-300 rounded-2xl p-3.5 bg-white outline-none focus:border-[#0f6b4a]"
+                      >
+                        <option value="">Select Plan</option>
+
+                        {(PRICING_DATA[watchedTools?.[index]?.name] || []).map(
+                          (plan) => (
+                            <option key={plan} value={plan}>
+                              {plan}
+                            </option>
+                          ),
+                        )}
+                      </select>
+                    </div>
+
+                    {/* COST */}
+                    <div>
+                      <label
+                        htmlFor={`cost-${index}`}
+                        className="block text-xs font-bold uppercase tracking-[0.15em] text-[#5a6168] mb-2"
+                      >
+                        Monthly Cost
+                      </label>
+
+                      <div className="relative">
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#5a6168] font-medium">
+                          $
+                        </span>
+
+                        <input
+                          id={`cost-${index}`}
+                          type="number"
+                          {...register(`tools.${index}.monthlyCost`, {
+                            valueAsNumber: true,
+                          })}
+                          className="w-full border border-gray-300 rounded-2xl p-3.5 pl-9 bg-white outline-none focus:border-[#0f6b4a]"
+                        />
+                      </div>
+                    </div>
+
+                    {/* TEAM SIZE */}
+                    <div>
+                      <label
+                        htmlFor={`team-${index}`}
+                        className="block text-xs font-bold uppercase tracking-[0.15em] text-[#5a6168] mb-2"
+                      >
+                        Seats
+                      </label>
 
                       <input
+                        id={`team-${index}`}
                         type="number"
-                        {...register(`tools.${index}.monthlyCost`)}
-                        className="w-full border border-gray-300 rounded-2xl p-3.5 pl-9 bg-white outline-none focus:border-[#0f6b4a]"
+                        {...register(`tools.${index}.teamSize`, {
+                          valueAsNumber: true,
+                        })}
+                        className="w-full border border-gray-300 rounded-2xl p-3.5 bg-white outline-none focus:border-[#0f6b4a]"
                       />
                     </div>
-                  </div>
 
-                  {/* TEAM SIZE */}
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-[0.15em] text-[#5a6168] mb-2">
-                      Seats
-                    </label>
+                    {/* USE CASE */}
+                    <div>
+                      <label
+                        htmlFor={`usecase-${index}`}
+                        className="block text-xs font-bold uppercase tracking-[0.15em] text-[#5a6168] mb-2"
+                      >
+                        Use Case
+                      </label>
 
-                    <input
-                      type="number"
-                      {...register(`tools.${index}.teamSize`)}
-                      className="w-full border border-gray-300 rounded-2xl p-3.5 bg-white outline-none focus:border-[#0f6b4a]"
-                    />
-                  </div>
+                      <select
+                        id={`usecase-${index}`}
+                        {...register(`tools.${index}.useCase`)}
+                        className="w-full border border-gray-300 rounded-2xl p-3.5 bg-white outline-none focus:border-[#0f6b4a]"
+                      >
+                        <option value="">Select Use Case</option>
 
-                  {/* USE CASE */}
-                  <div>
-                    <label className="block text-xs font-bold uppercase tracking-[0.15em] text-[#5a6168] mb-2">
-                      Use Case
-                    </label>
-
-                    <select
-                      {...register(`tools.${index}.useCase`)}
-                      className="w-full border border-gray-300 rounded-2xl p-3.5 bg-white outline-none focus:border-[#0f6b4a]"
-                    >
-                      <option value="coding">Coding</option>
-                      <option value="writing">Writing</option>
-                      <option value="research">Research</option>
-                      <option value="data">Data</option>
-                      <option value="mixed">Mixed</option>
-                    </select>
+                        <option value="coding">Coding</option>
+                        <option value="writing">Writing</option>
+                        <option value="research">Research</option>
+                        <option value="data">Data</option>
+                        <option value="mixed">Mixed</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-
+              ))}
+            </div>
+          )}
           {/* FOOTER */}
           <div className="mt-10 pt-6 border-t border-[#ececec] flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
             <p className="text-[#5a6168]">
@@ -311,7 +331,6 @@ export default function SpendForm() {
 
             <button
               type="submit"
-              onClick={() => navigate("/resultPage")}
               className="bg-[#101418] hover:bg-black text-white px-10 py-4 rounded-2xl text-lg font-semibold transition hover:-translate-y-0.5"
             >
               Generate AI Savings Report

@@ -1,6 +1,9 @@
 const { PRICING_DATA, ALTERNATIVES } = require("../data/PricingData");
 
 const MIN_FEATURE_SCORE = 80;
+const USE_CASE_TOLERANCE = 5;
+const MIN_USE_CASE_IMPROVEMENT = 3;
+const MIN_QUALITY_IMPROVEMENT = 3;
 const OVERPAY_LIMIT = 1.15;
 const UNDERPAY_LIMIT = 0.85;
 
@@ -148,34 +151,100 @@ function evaluateTool(tool) {
   // Step 4 — Alternative Check
 
   const alternatives = ALTERNATIVES[`${name}|${currentPlan}`] || [];
+  const currentUseCaseFit = useCase ? (planData.useCaseFit?.[useCase] ?? 0) : 0;
+  const currentFeatureScore = planData.featureScore ?? 0;
 
-  for (const alt of alternatives) {
-    const altPlan = PRICING_DATA[alt.tool]?.[alt.plan];
+  const candidates = alternatives
+    .map((alt) => {
+      const altPlan = PRICING_DATA[alt.tool]?.[alt.plan];
 
-    if (!altPlan) continue;
+      if (!altPlan) return null;
 
-    // Skip low quality alternatives
-    if (alt.featureParityScore < MIN_FEATURE_SCORE) {
-      continue;
+      // Skip low quality alternatives
+      if (alt.featureParityScore < MIN_FEATURE_SCORE) {
+        return null;
+      }
+
+      // Team size must fit
+      if (teamSize < altPlan.minTeam || teamSize > altPlan.maxTeam) {
+        return null;
+      }
+
+      const altUseCaseFit = useCase ? (altPlan.useCaseFit?.[useCase] ?? 0) : 0;
+      const altFeatureScore = altPlan.featureScore ?? 0;
+      const isSameOrCheaper = altPlan.pricePerUser <= monthlyCost;
+      const hasUseCaseSupport = useCase
+        ? alt.bestForWorkloads?.includes(useCase) ||
+          altUseCaseFit >= currentUseCaseFit - USE_CASE_TOLERANCE
+        : true;
+
+      if (!hasUseCaseSupport || !isSameOrCheaper) {
+        return null;
+      }
+
+      const monthlySavings = (monthlyCost - altPlan.pricePerUser) * teamSize;
+      const useCaseDelta = altUseCaseFit - currentUseCaseFit;
+      const qualityDelta = altFeatureScore - currentFeatureScore;
+
+      if (monthlySavings <= 0) {
+        if (
+          useCase &&
+          useCaseDelta < MIN_USE_CASE_IMPROVEMENT &&
+          qualityDelta < MIN_QUALITY_IMPROVEMENT
+        ) {
+          return null;
+        }
+      }
+
+      return {
+        alt,
+        altPlan,
+        altFeatureScore,
+        altUseCaseFit,
+        monthlySavings,
+        useCaseDelta,
+        qualityDelta,
+      };
+    })
+    .filter(Boolean);
+
+  if (candidates.length > 0) {
+    candidates.sort((a, b) => {
+      if (a.monthlySavings !== b.monthlySavings) {
+        return b.monthlySavings - a.monthlySavings;
+      }
+
+      if (a.useCaseDelta !== b.useCaseDelta) {
+        return b.useCaseDelta - a.useCaseDelta;
+      }
+
+      if (a.qualityDelta !== b.qualityDelta) {
+        return b.qualityDelta - a.qualityDelta;
+      }
+
+      return b.alt.featureParityScore - a.alt.featureParityScore;
+    });
+
+    const best = candidates[0];
+    const alt = best.alt;
+    const altPlan = best.altPlan;
+    const monthlySavings = best.monthlySavings;
+
+    let useCaseNote = "";
+    if (useCase) {
+      const currentFit = currentUseCaseFit;
+      const altFit = best.altUseCaseFit;
+      if (altFit > currentFit) {
+        useCaseNote = ` ${alt.tool} scores ${altFit}/100 for ${useCase}, higher than your current ${currentFit}/100.`;
+      } else if (!alt.bestForWorkloads?.includes(useCase)) {
+        useCaseNote = ` ${alt.tool} may be a weaker fit for your "${useCase}" workflow.`;
+      }
     }
 
-    // Skip expensive alternatives
-    if (altPlan.pricePerUser >= monthlyCost) {
-      continue;
-    }
-
-    // Team size must fit
-    if (teamSize < altPlan.minTeam || teamSize > altPlan.maxTeam) {
-      continue;
-    }
-
-    const monthlySavings = (monthlyCost - altPlan.pricePerUser) * teamSize;
-
-    let useCaseWarning = "";
-
-    if (useCase && !alt.bestForWorkloads?.includes(useCase)) {
-      useCaseWarning = ` However, ${alt.tool} may not be the best fit for your "${useCase}" workflow.`;
-    }
+    const savingsNote =
+      monthlySavings > 0
+        ? `You could save around ${usd(monthlySavings)}/month.`
+        : "Pricing is the same, but capability fit is stronger.";
 
     return {
       tool: name,
@@ -184,14 +253,14 @@ function evaluateTool(tool) {
       reasoning:
         `${alt.tool} ${alt.plan} costs ${usd(altPlan.pricePerUser)}/user ` +
         `compared to your current ${usd(monthlyCost)}/user. ` +
-        `You could save around ${usd(monthlySavings)}/month ` +
-        `with feature parity score ${alt.featureParityScore}/100.` +
-        useCaseWarning,
+        `${savingsNote} ` +
+        `Feature parity score ${alt.featureParityScore}/100.` +
+        useCaseNote,
       action: `Switch to ${alt.tool} ${alt.plan}.`,
       alternativeTool: alt.tool,
       alternativePlan: alt.plan,
-      monthlySavings,
-      yearlySavings: monthlySavings * 12,
+      monthlySavings: Math.max(0, monthlySavings),
+      yearlySavings: Math.max(0, monthlySavings) * 12,
     };
   }
 
@@ -205,6 +274,8 @@ function evaluateTool(tool) {
       `No better alternative with strong feature parity was found for ` +
       `${name} ${currentPlan}. Current pricing looks reasonable.`,
     action: "No immediate action required.",
+    alternativeTool: name,
+    alternativePlan: currentPlan,
     monthlySavings: 0,
     yearlySavings: 0,
   };
