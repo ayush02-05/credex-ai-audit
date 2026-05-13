@@ -1,19 +1,28 @@
 import axios from "axios";
-import { ArrowLeft, Download, Share2, Check } from "lucide-react";
+import {
+  ArrowLeft,
+  Download,
+  Share2,
+  AlertCircle,
+  CheckCircle as CheckCircleIcon,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import CubeLoader from "./CubeLoader";
 import { useNavigate, useParams } from "react-router-dom";
 import jsPDF from "jspdf";
 import { toPng } from "html-to-image";
+import Input from "./Function/Input";
+import TableRow from "./Function/TableRow";
+import TableHead from "./Function/TableHead";
+import SimpleActionCard from "./Function/SimpleActionCard";
+import Benefit from "./Function/Benefit";
 
 const formatMoney = (value) => {
   const number = Number(value);
-
   if (!Number.isFinite(number)) {
     return "$0";
   }
-
   return `$${number.toLocaleString()}`;
 };
 
@@ -22,7 +31,10 @@ export default function Result() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [auditData, setAuditData] = useState(null);
-  const [leadSubmitted, setLeadSubmitted] = useState(true);
+  const [leadSubmitted, setLeadSubmitted] = useState(false);
+  const [leadMessage, setLeadMessage] = useState(null);
+  const [leadError, setLeadError] = useState(null);
+
   const {
     register,
     handleSubmit,
@@ -34,8 +46,10 @@ export default function Result() {
       company: "",
       role: "",
       teamSize: "",
+      name: "",
     },
   });
+
   const savedForm = JSON.parse(
     localStorage.getItem(`credex-form-${auditId}`),
   ) || { tools: [] };
@@ -53,13 +67,12 @@ export default function Result() {
         const getAuditResult = await axios.get(
           `${import.meta.env.VITE_API_URL}/audit/getAudit/${auditId}`,
         );
-        console.log(getAuditResult.data);
         setAuditData(getAuditResult.data);
         setTimeout(() => {
           setLoading(false);
         }, 3000);
       } catch (error) {
-        console.log(error);
+        console.error(error);
         setTimeout(() => {
           setLoading(false);
         }, 3000);
@@ -96,6 +109,7 @@ export default function Result() {
       tool: item.tool,
       desc: item.reasoning,
       plan: item.plan,
+      verdict: item.verdict,
       cost: formatMoney(yearlyCost),
       recommendation:
         item.alternativeTool && item.alternativeTool !== item.tool
@@ -106,9 +120,7 @@ export default function Result() {
   });
 
   const maxSpend = Math.max(currentYearlySpend, optimizedSpend);
-
   const currentWidth = (currentYearlySpend / maxSpend) * 100;
-
   const optimizedWidth = (optimizedSpend / maxSpend) * 100;
 
   if (loading) {
@@ -122,7 +134,11 @@ export default function Result() {
       </div>
     );
   }
+
   const handleLeadSubmit = async (data) => {
+    setLeadError(null);
+    setLeadMessage(null);
+
     try {
       const payload = {
         auditId,
@@ -130,21 +146,26 @@ export default function Result() {
       };
 
       await axios.post(`${import.meta.env.VITE_API_URL}/lead/create`, payload);
-      console.log(payload);
 
       setLeadSubmitted(true);
-      reset(); // clears form
+      setLeadMessage("✓ Report saved! Check your email for the full report.");
+      reset();
+
+      // Clear message after 5 seconds
+      setTimeout(() => {
+        setLeadMessage(null);
+      }, 5000);
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      setLeadError(
+        "Failed to save your information. Please try again or contact support.",
+      );
     }
   };
 
   const shareUrl = `${import.meta.env.VITE_FRONTEND_URL}/result/${auditId}`;
 
   const handleShare = async () => {
-    // console.log(import.meta.env.VITE_FRONTEND_URL);
-    // console.log(auditId);
-    // console.log(shareUrl);
     try {
       await navigator.share({
         title: "Credex AI Audit",
@@ -153,7 +174,7 @@ export default function Result() {
       });
     } catch {
       navigator.clipboard.writeText(shareUrl);
-      alert("Link copied!");
+      alert("Link copied to clipboard!");
     }
   };
 
@@ -169,15 +190,11 @@ export default function Result() {
       });
 
       const pdf = new jsPDF("p", "mm", "a4");
-
       const imgProps = pdf.getImageProperties(dataUrl);
-
       const pdfWidth = pdf.internal.pageSize.getWidth();
-
       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
       pdf.addImage(dataUrl, "PNG", 0, 0, pdfWidth, pdfHeight);
-
       pdf.save("credex-audit-report.pdf");
     } catch (error) {
       console.error("PDF export failed:", error);
@@ -238,42 +255,45 @@ export default function Result() {
                 >
                   <Share2 size={16} />
                   Share Results
-                </button>{" "}
+                </button>
               </div>
             )}
           </div>
         </div>
 
-        {/* AI Summary */}
+        {/* AI Summary - HERO SECTION */}
         <section>
-          <h3 className="text-xs uppercase tracking-[0.35em] text-[#5a6168] mb-4">
-            Executive Summary
-          </h3>
-
-          <div className="relative overflow-hidden rounded-[28px] p-px">
-            {/* Animated Border Glow */}
-            <div className="absolute inset-0 rounded-[28px]" />
-
-            {/* Main Card */}
-            <div className="relative rounded-[28px] bg-white/70 bg-white p-6 border border-white/40">
+          <div className="relative overflow-hidden rounded-[28px] p-px bg-gradient-to-r from-[#0f6b4a]/10 to-transparent">
+            <div className="relative rounded-[28px] bg-white/80 backdrop-blur-sm p-8 border border-[#0f6b4a]/20">
               {/* Glow Effects */}
-              <div className="absolute -top-20 -left-15 w-55 h-55 bg-pink-400/30 rounded-full blur-2xl " />
-
-              <div className="absolute -bottom-25 -right-10 w-60 h-60 bg-cyan-400/30 rounded-full blur-2xl " />
+              <div className="absolute -top-20 -left-15 w-55 h-55 bg-emerald-400/20 rounded-full blur-2xl" />
+              <div className="absolute -bottom-25 -right-10 w-60 h-60 bg-teal-400/20 rounded-full blur-2xl" />
 
               {/* Content */}
               <div className="relative z-10">
-                <h4 className="font-display text-xl font-bold text-[#0f172a] mb-4">
-                  AI Financial Insight
-                </h4>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="bg-[#0f6b4a] text-white p-2 rounded-xl">
+                    <svg
+                      className="w-5 h-5"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M10 3.5a.5.5 0 01.5.5v6h6a.5.5 0 010 1h-6v6a.5.5 0 01-1 0v-6h-6a.5.5 0 010-1h6V4a.5.5 0 01.5-.5z" />
+                    </svg>
+                  </div>
+                  <h2 className="font-display text-3xl md:text-4xl font-bold text-[#0f172a]">
+                    AI-Powered Analysis
+                  </h2>
+                </div>
 
-                <p className="leading-relaxed text-[#1e293b] text-[15px]">
-                  {auditData.audit.aiSummary}
+                <p className="text-lg text-[#1e293b] leading-relaxed">
+                  {auditData.audit.aiSummary || "Analyzing your tool stack..."}
                 </p>
               </div>
             </div>
           </div>
         </section>
+
         {/* Key Recommendations */}
         <section className="space-y-4">
           <div className="flex items-center justify-between">
@@ -369,7 +389,8 @@ export default function Result() {
             Tool Breakdown
           </h3>
 
-          <div className="bg-white border border-[#e0e3e5] rounded-2xl overflow-hidden shadow-soft">
+          {/* DESKTOP TABLE */}
+          <div className="hidden md:block bg-white border border-[#e0e3e5] rounded-2xl overflow-hidden shadow-soft">
             <table className="w-full">
               <thead className="bg-[#f7f5f2] border-b border-[#e0e3e5]">
                 <tr>
@@ -388,194 +409,158 @@ export default function Result() {
               </tbody>
             </table>
           </div>
+
+          {/* MOBILE CARDS */}
+          <div className="md:hidden space-y-4">
+            {breakdownRows.map((row, i) => (
+              <div
+                key={i}
+                className="bg-white border border-[#e0e3e5] rounded-xl p-4"
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div>
+                    <h4 className="font-bold text-lg">{row.tool}</h4>
+                    <p className="text-xs text-[#5a6168] mt-1">{row.desc}</p>
+                  </div>
+                  <span className="text-xs font-semibold text-[#0f6b4a] bg-[#e6f2ed] px-2 py-1 rounded-full">
+                    {row.verdict}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                  <div>
+                    <p className="text-xs text-[#5a6168] mb-1">
+                      Current Cost/yr
+                    </p>
+                    <p className="font-semibold">{row.cost}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-[#5a6168] mb-1">Savings</p>
+                    <p className="font-bold text-[#0f6b4a]">{row.savings}</p>
+                  </div>
+                </div>
+
+                <div className="p-3 bg-[#f7f5f2] rounded-lg">
+                  <p className="text-xs font-semibold text-[#101418] mb-1">
+                    Recommendation:
+                  </p>
+                  <p className="text-sm text-[#44474d]">{row.recommendation}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </section>
 
         {/* CTA */}
         <section className="bg-white border border-[#e0e3e5] rounded-2xl p-8 grid lg:grid-cols-2 gap-10 shadow-soft">
           <div>
             <h2 className="font-display text-3xl font-bold mb-4">
-              Capture these savings with Credex
+              Unlock Your Complete AI Spend Report
             </h2>
 
             <p className="text-[#44474d] leading-relaxed mb-6">
-              Our team helps startups optimize software spending, reduce waste,
-              and negotiate smarter AI tooling decisions.
+              Save your audit results and receive a detailed breakdown of
+              optimization opportunities, cost-saving recommendations, and AI
+              stack insights for your team.
             </p>
 
             <div className="space-y-3">
-              <Benefit text="AI tooling optimization support" />
-              <Benefit text="License & vendor negotiation help" />
-              <Benefit text="Continuous spend monitoring" />
+              <Benefit text="Detailed AI spend breakdown" />
+              <Benefit text="Personalized optimization recommendations" />
+              <Benefit text="Exportable audit insights & savings report" />
             </div>
           </div>
 
           <div className="bg-[#f7f5f2] border border-[#e0e3e5] rounded-xl p-6">
-            <h3 className="font-display text-xl font-semibold mb-6">
-              Book a Free Consultation
+            <h3 className="font-display text-xl font-semibold mb-2">
+              Access Full Report
             </h3>
+
+            <p className="text-sm text-[#5a6168] mb-6">
+              Enter your details to save and unlock your personalized audit
+              report.
+            </p>
+
+            {/* SUCCESS MESSAGE */}
+            {leadMessage && (
+              <div className="bg-green-50 border border-green-200 text-green-700 p-4 rounded-lg text-sm mb-6 flex items-start gap-3">
+                <CheckCircleIcon size={18} className="flex-shrink-0 mt-0.5" />
+                <span>{leadMessage}</span>
+              </div>
+            )}
+
+            {/* ERROR MESSAGE */}
+            {leadError && (
+              <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg text-sm mb-6 flex items-start gap-3">
+                <AlertCircle size={18} className="flex-shrink-0 mt-0.5" />
+                <span>{leadError}</span>
+              </div>
+            )}
 
             <form
               onSubmit={handleSubmit(handleLeadSubmit)}
               className="space-y-4"
             >
-              {" "}
               <div>
                 <Input
                   label="Work Email"
                   placeholder="jane@company.com"
                   {...register("email", { required: true })}
                 />
+
                 {errors.email && (
-                  <p className="text-red-500 text-xs">Email is required</p>
+                  <p className="text-red-500 text-xs mt-1">Email is required</p>
                 )}
               </div>
+
+              <div>
+                <Input
+                  label="Name"
+                  placeholder="Your name"
+                  {...register("name")}
+                />
+              </div>
+
               <div>
                 <Input
                   label="Company"
-                  placeholder="xyz company"
+                  placeholder="XYZ Company"
                   {...register("company")}
                 />
               </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <Input label="Role" {...register("role")} />
-
                 <Input label="Team Size" {...register("teamSize")} />
               </div>
-              {/* Honeypot Field */}
-              <div className="hidden">
-                <input type="text" {...register("website")} />
+
+              {/* Honeypot */}
+              <div
+                style={{
+                  position: "absolute",
+                  left: "-9999px",
+                  visibility: "hidden",
+                }}
+              >
+                <label htmlFor="website">Website</label>
+                <input type="text" id="website" {...register("website")} />
               </div>
+
               <button
                 type="submit"
-                className="w-full bg-[#101418] text-white py-3 rounded-lg font-semibold hover:opacity-90 transition"
+                disabled={leadSubmitted}
+                className={`w-full py-3 rounded-lg font-semibold transition ${
+                  leadSubmitted
+                    ? "bg-green-100 text-green-700 cursor-default"
+                    : "bg-[#101418] text-white hover:opacity-90"
+                }`}
               >
-                Unlock Report
+                {leadSubmitted ? "✓ Report Saved" : "Unlock Full Report"}
               </button>
             </form>
           </div>
         </section>
       </main>
-    </div>
-  );
-}
-
-/* COMPONENTS */
-
-function TableHead({ children }) {
-  return (
-    <th className="text-left py-4 px-6 text-xs font-semibold text-[#5a6168] uppercase tracking-wider">
-      {children}
-    </th>
-  );
-}
-
-function TableRow({ tool, desc, plan, cost, recommendation, savings }) {
-  return (
-    <tr className="border-b border-[#e0e3e5] hover:bg-[#f7f5f2] transition">
-      <td className="py-5 px-6">
-        <h4 className="font-semibold">{tool}</h4>
-        <p className="text-xs text-[#5a6168] mt-1">{desc}</p>
-      </td>
-
-      <td className="py-5 px-6">{plan}</td>
-      <td className="py-5 px-6">{cost}</td>
-      <td className="py-5 px-6">{recommendation}</td>
-
-      <td className="py-5 px-6 font-bold text-[#0f6b4a]">{savings}</td>
-    </tr>
-  );
-}
-
-function SimpleActionCard({
-  tool,
-  verdict,
-  reasoning,
-  action,
-  alternativeTool,
-  alternativePlan,
-  yearlySavings,
-  monthlySavings,
-}) {
-  return (
-    <div className="bg-white border border-[#e0e3e5] rounded-2xl p-6 shadow-soft flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-      <div>
-        <div className="flex items-center gap-3 mb-3">
-          <h4 className="font-display text-lg font-bold">{tool}</h4>
-
-          <span className="text-xs font-semibold text-[#0f6b4a] bg-[#e6f2ed] px-3 py-1 rounded-full">
-            {verdict}
-          </span>
-        </div>
-
-        <p className="text-sm text-[#5a6168] mb-2">
-          <span className="font-semibold text-[#101418]">Reason:</span>{" "}
-          {reasoning}
-        </p>
-
-        <p className="text-sm text-[#0f6b4a]">
-          <span className="font-semibold">Action:</span> {action}
-        </p>
-
-        {alternativeTool && alternativeTool !== tool && (
-          <p className="text-sm text-[#101418] mt-2">
-            <span className="font-semibold">Recommendation:</span>{" "}
-            {alternativeTool} {alternativePlan}
-          </p>
-        )}
-      </div>
-
-      <div className="flex flex-col items-end min-w-30">
-        <span className="font-display text-2xl font-bold text-[#0f6b4a]">
-          ${yearlySavings}
-        </span>
-
-        <span className="text-xs text-[#5a6168]">estimated yearly savings</span>
-
-        <span className="text-sm text-[#44474d] mt-1">
-          ${monthlySavings}/mo
-        </span>
-      </div>
-    </div>
-  );
-}
-
-function ProgressRow({ label, value, width, color }) {
-  return (
-    <div>
-      <div className="flex justify-between text-sm mb-2">
-        <span className="text-[#44474d]">{label}</span>
-
-        <span className="font-semibold">{value}/yr</span>
-      </div>
-
-      <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
-        <div className={`h-3 rounded-full ${color}`} style={{ width }} />
-      </div>
-    </div>
-  );
-}
-
-function Benefit({ text }) {
-  return (
-    <div className="flex items-center gap-3">
-      <Check className="text-[#0f6b4a]" size={18} />
-      <span>{text}</span>
-    </div>
-  );
-}
-
-function Input({ label, placeholder, ...rest }) {
-  return (
-    <div>
-      <label className="block text-sm font-medium mb-2 text-[#44474d]">
-        {label}
-      </label>
-
-      <input
-        placeholder={placeholder}
-        className="w-full border border-[#e0e3e5] rounded-lg px-4 py-3 bg-white outline-none focus:ring-2 focus:ring-[#0f6b4a]"
-        {...rest}
-      />
     </div>
   );
 }

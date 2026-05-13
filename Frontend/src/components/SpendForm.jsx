@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Boxes, Plus, Trash2, CheckCircle, Sparkles } from "lucide-react";
 import { PRICING_DATA } from "./pricingDataFrontend";

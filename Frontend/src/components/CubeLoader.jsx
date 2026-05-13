@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function CubeLoader() {
   return (
     <div className="flex flex-col mt-50 items-center justify-center gap-12 p-12 min-h-[400px] bg-slate-950/0 perspective-container">

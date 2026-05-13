@@ -75,6 +75,14 @@ const createAudit = async (req, res) => {
     });
 
     await audit.save();
+    // Log DB/collection and doc
+    console.log(
+      "[Audit] Saved to DB:",
+      audit.constructor.db.name,
+      "/",
+      audit.constructor.collection.name,
+    );
+    console.log("[Audit] Document:", audit.toObject());
 
     // Response
     return res.status(201).json({

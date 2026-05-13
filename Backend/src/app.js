@@ -13,6 +13,7 @@ app.use(express.json());
 app.use(
   Cors({
     origin: "*",
+    credentials: true,
   }),
 );
 // Audit

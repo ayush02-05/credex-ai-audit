@@ -101,6 +101,7 @@
 - Add AI-generated audit summaries
 - Connect backend audit response with frontend result dashboard
 - Handle more edge cases in pricing comparison and savings calculation
+
 ## Day 4 — 2026-05-10
 
 **Hours worked:** 5-6 Hours
@@ -126,7 +127,7 @@
 - Simplified a lot of backend code because some parts became too over-engineered.
 - Improved API response structure for frontend rendering.
 - Connected frontend and backend properly and tested the audit flow.
-- Used AI tools like :contentReference[oaicite:0]{index=0} ChatGPT and :contentReference[oaicite:1]{index=1} Claude to brainstorm and improve the audit logic.
+- Used AI tools (ChatGPT and Claude) to brainstorm and improve the audit logic.
 - Since I was not fully familiar with SaaS audit systems, I used AI discussions to better understand:
   - pricing comparison logic
   - savings calculations
@@ -135,24 +136,78 @@
   - practical audit reasoning
 - Reworked and simplified many AI-generated ideas to better match my own understanding and coding style.
 
-## Challenges Faced
+## Day 5 — 2026-05-11
 
-- Some parts of the audit logic became too complex at first.
-- It was difficult to balance good logic with simple readable code.
-- Handling multiple audit conditions together took time.
+**Hours worked:** 5
 
-## Learnings
+**What I did:**
 
-- Learned more about backend structure and controller logic.
-- Better understanding of how pricing audit systems can work.
-- Learned how to separate business logic from controllers.
-- Improved understanding of API responses and savings calculations.
-- Learned that simpler and readable code is often better than overly advanced code.
-- Learned how AI tools can help in brainstorming logic and architecture during development.
+- Worked on the complete audit engine logic, including pricing calculations, savings estimation, and audit evaluation flow.
+- Designed recommendation formats for different cases such as overpaying plans, optimal plans, plan mismatch, and alternative tool suggestions.
+- Improved the structure of audit result objects to make frontend integration and rendering cleaner.
 
-## Next Plan
+**What I learned:**
 
-- Improve the audit result UI.
-- Add better result cards and summaries.
-- Add audit history feature.
-- Improve recommendation quality further.
+- Learned how to structure rule-based recommendation systems and handle different pricing edge cases.
+- Improved understanding of backend logic organization and scalable response formatting.
+
+**Blockers / what I'm stuck on:**
+
+- Different SaaS tools had different pricing structures, which caused inconsistencies in some recommendation outputs.
+- Spent time refining the evaluation flow for more predictable results.
+
+**Plan for tomorrow:**
+
+- Integrate the backend audit system with the frontend and add AI-generated summaries.
+
+---
+
+## Day 6 — 2026-05-12
+
+**Hours worked:** 7
+
+**What I did:**
+
+- Integrated backend audit APIs with the frontend result pages and connected the full audit workflow.
+- Implemented AI-generated executive summaries and improved audit result presentation.
+- Resolved multiple bugs and integration issues related to API handling, rendering, loading states, and edge cases.
+
+**What I learned:**
+
+- Learned more about frontend-backend integration, asynchronous workflows, and debugging complex API issues.
+- Improved understanding of handling AI-generated responses within an application flow.
+
+**Blockers / what I'm stuck on:**
+
+- Faced inconsistent API response and rendering issues during integration.
+- Some bugs were difficult to debug because they depended on specific audit inputs.
+
+**Plan for tomorrow:**
+
+- Build lead capture functionality, sharing features, and prepare the app for deployment.
+
+---
+
+## Day 7 — 2026-05-13
+
+**Hours worked:** 6
+
+**What I did:**
+
+- Built the lead capture form and database storage functionality for user submissions.
+- Added shareable audit result features and improved the overall report experience.
+- Worked on deployment setup, production configuration, testing, and final UI polishing.
+
+**What I learned:**
+
+- Learned deployment optimization, environment variable management, and production setup practices.
+- Improved understanding of preparing applications for real-world usage and final delivery.
+
+**Blockers / what I'm stuck on:**
+
+- Encountered deployment configuration issues and some minor production bugs during testing.
+- Needed additional debugging for environment variable setup and sharing features.
+
+**Plan for tomorrow:**
+
+- Perform final testing, documentation cleanup, and prepare the final submission.

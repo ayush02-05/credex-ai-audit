@@ -1,5 +1,5 @@
 const PRICING_DATA = {
-  //  CHATGPT  
+  //  CHATGPT
   ChatGPT: {
     Free: {
       pricePerUser: 0,
@@ -88,7 +88,7 @@ const PRICING_DATA = {
     },
   },
 
-  //  CLAUDE  
+  //  CLAUDE
   Claude: {
     Free: {
       pricePerUser: 0,
@@ -194,7 +194,7 @@ const PRICING_DATA = {
     },
   },
 
-  //  CURSOR  
+  //  CURSOR
   Cursor: {
     Hobby: {
       pricePerUser: 0,
@@ -300,7 +300,7 @@ const PRICING_DATA = {
     },
   },
 
-  //  WINDSURF 
+  //  WINDSURF
   Windsurf: {
     Free: {
       pricePerUser: 0,
@@ -349,7 +349,7 @@ const PRICING_DATA = {
     },
   },
 
-  //  GEMINI 
+  //  GEMINI
   Gemini: {
     Free: {
       pricePerUser: 0,
@@ -387,7 +387,7 @@ const PRICING_DATA = {
     },
   },
 
-  //  PERPLEXITY  
+  //  PERPLEXITY
   Perplexity: {
     Free: {
       pricePerUser: 0,
@@ -442,7 +442,7 @@ const PRICING_DATA = {
     },
   },
 
-  //  GITHUB COPILOT 
+  //  GITHUB COPILOT
   "GitHub Copilot": {
     Free: {
       pricePerUser: 0,
@@ -950,7 +950,6 @@ const ALTERNATIVES = {
       note: "Cursor Hobby offers agentic coding that Copilot Free lacks. Switch only if the team is not entrenched in VS Code + GitHub workflows.",
     },
   ],
-
   "GitHub Copilot|Pro": [
     {
       tool: "Cursor",

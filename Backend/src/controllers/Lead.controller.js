@@ -54,6 +54,14 @@ const createLead = async (req, res) => {
     });
 
     await lead.save();
+    // Log DB/collection and doc
+    console.log(
+      "[Lead] Saved to DB:",
+      lead.constructor.db.name,
+      "/",
+      lead.constructor.collection.name,
+    );
+    console.log("[Lead] Document:", lead.toObject());
 
     // email sending (fail-safe)
     try {
