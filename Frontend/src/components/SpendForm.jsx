@@ -33,6 +33,7 @@ export default function SpendForm() {
 
   // SIMPLE STATE FOR DYNAMIC ROWS
   const [tools, setTools] = useState(savedData?.tools || []);
+  const [loading, setLoading] = useState(false);
 
   // ONLY useForm
   const { register, handleSubmit, watch, reset } = useForm({
@@ -56,11 +57,11 @@ export default function SpendForm() {
   // Remove Tool
   const removeTool = (index) => {
     const updatedTools = tools.filter((_, i) => i !== index);
-
     setTools(updatedTools);
   };
 
   const onSubmit = async (data) => {
+    setLoading(true);
     try {
       const createResponse = await axios.post(
         `${import.meta.env.VITE_API_URL}/audit/create`,
@@ -68,12 +69,12 @@ export default function SpendForm() {
       );
       const auditId = createResponse.data.auditId;
       // Persist form data
-
       localStorage.setItem(`credex-form-${auditId}`, JSON.stringify(data));
-
       navigate(`/result/${auditId}`);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -331,9 +332,36 @@ export default function SpendForm() {
 
             <button
               type="submit"
-              className="bg-[#101418] hover:bg-black text-white px-10 py-4 rounded-2xl text-lg font-semibold transition hover:-translate-y-0.5"
+              className={`bg-[#101418] hover:bg-black text-white px-10 py-4 rounded-2xl text-lg font-semibold transition hover:-translate-y-0.5 flex items-center justify-center gap-2 ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
+              disabled={loading}
             >
-              Generate AI Savings Report
+              {loading ? (
+                <>
+                  <svg
+                    className="animate-spin mr-2 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                    ></path>
+                  </svg>
+                  Generating...
+                </>
+              ) : (
+                "Generate AI Savings Report"
+              )}
             </button>
           </div>
         </section>

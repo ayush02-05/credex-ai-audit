@@ -1,7 +1,13 @@
 USER_INTERVIEWS (real conversations only)
 Note: As of May 13, 2026, no real user interviews have been conducted yet. All sections below are intentionally left blank until actual interviews take place.
 
+HEAD
 This file is intentionally structured so you can paste notes from three real 10–15 minute conversations and turn them into clean, reviewable write-ups. I can rewrite/condense your raw notes into this format as soon as you drop them in.
+
+**Note:** As of May 13, 2026, no real user interviews have been conducted yet. All sections below are intentionally left blank until actual interviews take place.
+
+This file is intentionally structured so you can paste notes from **three real 10–15 minute conversations** and turn them into clean, reviewable write-ups. I can rewrite/condense your raw notes into this format as soon as you drop them in.
+e899ebd (Laoding CTA on generate audit)
 
 Important: I did not fabricate interviews or quotes.
 
